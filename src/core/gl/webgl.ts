@@ -10,13 +10,13 @@ export class WebGLUtilities {
     } else {
       canvas = document.getElementById(elementId) as HTMLCanvasElement
       if (!canvas) {
-        throw new Error('Canvas element not found')
+        throw new Error('[WebGLUtilities] Canvas element not found')
       }
     }
 
     gl = canvas.getContext('webgl') as WebGLRenderingContext
     if (!gl) {
-      throw new Error('WebGL not supported')
+      throw new Error('[WebGLUtilities] WebGL not supported')
     }
 
     return canvas
