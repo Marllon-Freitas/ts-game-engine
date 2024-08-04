@@ -1,0 +1,30 @@
+{
+  "name": "ts-game-engine",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "author": "Marllon Freitas",
+  "description": "A simple game engine using TypeScript",
+  "scripts": {
+    "dev": "webpack --mode=development --watch",
+    "build": "webpack --mode=production",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.0.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "eslint": "^8.50.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "prettier": "3.3.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1"
+  }
+}
