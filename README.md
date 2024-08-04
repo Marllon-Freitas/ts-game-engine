@@ -2,10 +2,6 @@
 
 A basic, TypeScript-based game engine using WebGL. This project is currently in progress.
 
-## Table of Contents
-
-- [Technologies](#technologies)
-
 ## Technologies
 
 - **TypeScript** ![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat&logo=typescript&logoColor=white).
