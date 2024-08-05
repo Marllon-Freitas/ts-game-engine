@@ -4,6 +4,7 @@ export class Shader {
   private m_name: string
   private m_program!: WebGLProgram
   private m_attributes: { [name: string]: number } = {}
+  private m_uniforms: { [name: string]: WebGLUniformLocation } = {}
 
   public constructor(
     name: string,
@@ -16,6 +17,7 @@ export class Shader {
 
     this.m_program = this.createProgram(vertexShader, fragmentShader)
     this.detectAttributes()
+    this.detectUniforms()
   }
 
   public get name(): string {
@@ -27,6 +29,17 @@ export class Shader {
     if (location === undefined) {
       throw new Error(
         `[Shader] Attribute '${name}' not found in shader '${this.m_name}'`
+      )
+    }
+
+    return location
+  }
+
+  public getUniformLocation(name: string): WebGLUniformLocation {
+    const location = this.m_uniforms[name]
+    if (!location) {
+      throw new Error(
+        `[Shader] Uniform '${name}' not found in shader '${this.m_name}'`
       )
     }
 
@@ -104,6 +117,34 @@ export class Shader {
       }
 
       this.m_attributes[attributeInfo.name] = attributeLocation
+    }
+  }
+
+  private detectUniforms(): void {
+    const uniformCount = gl.getProgramParameter(
+      this.m_program,
+      gl.ACTIVE_UNIFORMS
+    )
+    for (let i = 0; i < uniformCount; i++) {
+      const uniformInfo: WebGLActiveInfo | null = gl.getActiveUniform(
+        this.m_program,
+        i
+      )
+      if (!uniformInfo) {
+        break
+      }
+
+      const uniformLocation = gl.getUniformLocation(
+        this.m_program,
+        uniformInfo.name
+      )
+      if (!uniformLocation) {
+        throw new Error(
+          `[Shader] Error getting uniform location '${uniformInfo.name}'`
+        )
+      }
+
+      this.m_uniforms[uniformInfo.name] = uniformLocation
     }
   }
 }
