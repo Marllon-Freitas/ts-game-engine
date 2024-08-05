@@ -3,6 +3,7 @@ import { gl } from './webgl'
 export class Shader {
   private m_name: string
   private m_program!: WebGLProgram
+  private m_attributes: { [name: string]: number } = {}
 
   public constructor(
     name: string,
@@ -14,10 +15,22 @@ export class Shader {
     const fragmentShader = this.loadShader(gl.FRAGMENT_SHADER, fragmentSource)
 
     this.m_program = this.createProgram(vertexShader, fragmentShader)
+    this.detectAttributes()
   }
 
   public get name(): string {
     return this.m_name
+  }
+
+  public getAttributeLocation(name: string): number {
+    const location = this.m_attributes[name]
+    if (location === undefined) {
+      throw new Error(
+        `[Shader] Attribute '${name}' not found in shader '${this.m_name}'`
+      )
+    }
+
+    return location
   }
 
   private loadShader(shaderType: number, source: string): WebGLShader {
@@ -64,5 +77,33 @@ export class Shader {
     }
 
     return this.m_program
+  }
+
+  private detectAttributes(): void {
+    const attributeCount = gl.getProgramParameter(
+      this.m_program,
+      gl.ACTIVE_ATTRIBUTES
+    )
+    for (let i = 0; i < attributeCount; i++) {
+      const attributeInfo: WebGLActiveInfo | null = gl.getActiveAttrib(
+        this.m_program,
+        i
+      )
+      if (!attributeInfo) {
+        break
+      }
+
+      const attributeLocation = gl.getAttribLocation(
+        this.m_program,
+        attributeInfo.name
+      )
+      if (attributeLocation < 0) {
+        throw new Error(
+          `[Shader] Error getting attribute location '${attributeInfo.name}'`
+        )
+      }
+
+      this.m_attributes[attributeInfo.name] = attributeLocation
+    }
   }
 }

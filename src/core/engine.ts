@@ -1,10 +1,11 @@
+import { AttributeInfo, GLBuffer } from './gl/glBuffer'
 import { Shader } from './gl/shader'
 import { gl, WebGLUtilities } from './gl/webgl'
 
 export class Engine {
   private m_canvas!: HTMLCanvasElement
   private m_shader!: Shader
-  private m_buffer!: WebGLBuffer
+  private m_buffer!: GLBuffer
 
   public constructor() {}
 
@@ -33,31 +34,32 @@ export class Engine {
   private loop(): void {
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.m_buffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(0)
-    gl.drawArrays(gl.TRIANGLES, 0, 3)
+    this.m_buffer.bind()
+    this.m_buffer.draw()
 
     requestAnimationFrame(() => this.loop())
   }
 
   private createBuffer(): void {
-    this.m_buffer = gl.createBuffer() as WebGLBuffer
+    this.m_buffer = new GLBuffer(3)
     if (!this.m_buffer) {
       throw new Error('[Engine] Error creating buffer')
     }
 
-    const vertices = new Float32Array([
+    const positionAttribute = new AttributeInfo()
+    positionAttribute.location =
+      this.m_shader.getAttributeLocation('a_position')
+    positionAttribute.offset = 0
+    positionAttribute.size = 3
+    this.m_buffer.addAttributeLocation(positionAttribute)
+
+    const vertices = [
       // X,   Y,  Z
       0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.0
-    ])
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.m_buffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0)
-    gl.enableVertexAttribArray(0)
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, null)
-    gl.disableVertexAttribArray(0)
+    ]
+    this.m_buffer.addData(vertices)
+    this.m_buffer.upload()
+    this.m_buffer.unbind()
   }
 
   private loadShader(): void {
