@@ -58,8 +58,6 @@ export class Sprite {
     this.m_buffer.unbind()
   }
 
-  // public update(time: number): void {}
-
   public draw(): void {
     this.m_buffer.bind()
     this.m_buffer.draw()
