@@ -1,0 +1,17 @@
+{
+  "name": "ts-game-engine",
+  "author": "Marllon Freitas",
+  "description": "A basic, TypeScript-based game engine using WebGL.",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  }
+}
