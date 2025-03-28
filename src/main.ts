@@ -1,4 +1,4 @@
-import { Engine } from "./engine";
+import { Engine } from "./core/engine";
 
 let engine: Engine;
 
