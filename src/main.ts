@@ -1,20 +1,20 @@
 
 export class Engine {
-  constructor() {
-    console.log('Engine initialized');
-  }
-
+  // private methods and attributes:
   private m_count: number = 0;
-
-  // private methods
+  
   private loop(): void {
     console.log('Engine loop running');
     this.m_count++;
     document.body.innerHTML = `Hello World! ${this.m_count}`;
     requestAnimationFrame(this.loop.bind(this));
   }
+  
+  // public methods and attributes:
+  public constructor() {
+    console.log('Engine initialized');
+  }
 
-  // public methods
   public start(): void {
     console.log('Engine started');
     this.loop();
