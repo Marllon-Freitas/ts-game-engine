@@ -6,16 +6,20 @@ import { WegGLUtilities } from "./webGL/webGL";
  */
 export class Engine {
   // private methods and attributes:
-  private m_canvas: HTMLCanvasElement | null = null;
-  private m_shader: Shader | null = null;
-  private m_buffer: WebGLBuffer | null = null;
+  private m_canvas!: HTMLCanvasElement;
+  private m_shader!: Shader;
+  private m_buffer!: WebGLBuffer;
 
   private loop(): void {
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
 
     WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, this.m_buffer);
-    WegGLUtilities.gl.vertexAttribPointer(0, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
-    WegGLUtilities.gl.enableVertexAttribArray(0);
+
+    if (!this.m_shader) throw new Error("Shader not loaded.");
+    let positionLocation = this.m_shader.getAttributeLocation("a_position");
+
+    WegGLUtilities.gl.vertexAttribPointer(positionLocation, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
+    WegGLUtilities.gl.enableVertexAttribArray(positionLocation);
 
     WegGLUtilities.gl.drawArrays(WegGLUtilities.gl.TRIANGLES, 0, 3);
 
@@ -49,18 +53,17 @@ export class Engine {
       0, 0.5, 0,
       0.5, 0.5, 0,
     ]);
-    WegGLUtilities.gl.vertexAttribPointer(0, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
-    WegGLUtilities.gl.enableVertexAttribArray(0);
     WegGLUtilities.gl.bufferData(WegGLUtilities.gl.ARRAY_BUFFER, vertices, WegGLUtilities.gl.STATIC_DRAW);
 
+    let positionLocation = this.m_shader.getAttributeLocation("a_position");
+
     WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, null);
-    WegGLUtilities.gl.disableVertexAttribArray(0);
+    WegGLUtilities.gl.disableVertexAttribArray(positionLocation);
   }
   
   // public methods and attributes:
   public constructor() {
     console.log('Engine constructor called');
-    this.m_canvas = null;
   }
 
   /**

@@ -7,7 +7,8 @@ import { WegGLUtilities } from "./webGL";
 export class Shader {
   // private methods and attributes:
   private m_name: string;
-  private m_program: WebGLProgram | null = null;
+  private m_program!: WebGLProgram;
+  private m_attributes: { [name: string]: number } = {};
 
   /**
    * Loads a shader source code and compiles it.
@@ -54,6 +55,20 @@ export class Shader {
       throw new Error(`Error linking shader program ${this.m_name}: ${error}`);
     }
   }
+
+  /**
+   * Detects and stores the attributes of the shader program.
+   * @throws Will throw an error if the shader program is not created.
+   */
+  private detectAttributes(): void {
+    if (!this.m_program) throw new Error("Shader program not created.");
+    let attributeCount = WegGLUtilities.gl.getProgramParameter(this.m_program, WegGLUtilities.gl.ACTIVE_ATTRIBUTES);
+    for (let i = 0; i < attributeCount; i++) {
+      let info = WegGLUtilities.gl.getActiveAttrib(this.m_program, i);
+      if (!info) break;
+      this.m_attributes[info.name] = WegGLUtilities.gl.getAttribLocation(this.m_program, info.name);
+    }
+  }
   
   // public methods and attributes:
   /**
@@ -67,6 +82,7 @@ export class Shader {
     let vertexShader = this.loadShaderSource(vertexShaderSource, WegGLUtilities.gl.VERTEX_SHADER);
     let fragmentShader = this.loadShaderSource(fragmentShaderSource, WegGLUtilities.gl.FRAGMENT_SHADER);
     this.createProgram(vertexShader, fragmentShader);
+    this.detectAttributes();
   }
 
   public get name(): string {
@@ -76,5 +92,17 @@ export class Shader {
   public use(): void {
     if (!this.m_program) throw new Error("Shader program not created.");
     WegGLUtilities.gl.useProgram(this.m_program);
+  }
+
+  /**
+   * This method retrieves the location of a given attribute in the shader program
+   * @param name The name of the attribute to get the location for.
+   * @throws Will throw an error if the shader program is not created or the attribute is not found.
+   * @returns The location of the attribute in the shader program.
+   */
+  public getAttributeLocation(name: string): number {
+    if (!this.m_program) throw new Error("Shader program not created.");
+    if (!(name in this.m_attributes)) throw new Error(`Attribute ${name} not found in shader ${this.m_name}.`);
+    return this.m_attributes[name];
   }
 }
