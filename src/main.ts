@@ -1,4 +1,4 @@
-import { Engine } from "./core/engine";
+import { Engine } from './core/engine';
 
 let engine: Engine;
 
@@ -6,9 +6,8 @@ let engine: Engine;
 window.onload = () => {
   engine = new Engine();
   engine.start();
-}
+};
 
 window.onresize = () => {
-  if (engine) 
-    engine.resize();
-}
+  if (engine) engine.resize();
+};

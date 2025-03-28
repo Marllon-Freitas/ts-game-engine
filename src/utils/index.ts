@@ -1,1 +1,1 @@
-export const CANVAS_ID = "gameCanvas";
+export const CANVAS_ID = 'gameCanvas';

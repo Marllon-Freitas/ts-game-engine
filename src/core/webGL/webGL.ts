@@ -1,4 +1,4 @@
-import { CANVAS_ID } from "../../utils";
+import { CANVAS_ID } from '../../utils';
 
 /**
  * Responsible for setting up and managing WebGL rendering contexts.
@@ -15,9 +15,9 @@ export class WegGLUtilities {
    * @throws Will throw an error if the browser does not support WebGL.
    */
   public static initWebGL(canvasId?: string): HTMLCanvasElement {
-    let canvas: HTMLCanvasElement = canvasId 
-      ? document.getElementById(canvasId) as HTMLCanvasElement 
-      : document.createElement("canvas") as HTMLCanvasElement;
+    let canvas: HTMLCanvasElement = canvasId
+      ? (document.getElementById(canvasId) as HTMLCanvasElement)
+      : (document.createElement('canvas') as HTMLCanvasElement);
 
     if (!canvas) throw new Error(`Canvas with ID ${canvasId} not found.`);
 
@@ -28,13 +28,12 @@ export class WegGLUtilities {
       canvas.height = window.innerHeight;
     }
 
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext('webgl');
 
-    if (!gl) 
-      throw new Error("Unable to initialize WebGL. Your browser may not support it.");
+    if (!gl) throw new Error('Unable to initialize WebGL. Your browser may not support it.');
 
     WegGLUtilities.gl = gl;
-    
+
     return canvas;
   }
 }

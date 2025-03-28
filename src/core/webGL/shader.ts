@@ -1,4 +1,4 @@
-import { WegGLUtilities } from "./webGL";
+import { WegGLUtilities } from './webGL';
 
 /**
  * Shader class for managing WebGL shaders.
@@ -18,8 +18,8 @@ export class Shader {
    * @throws Will throw an error if the shader cannot be created or compiled.
    */
   private loadShaderSource(source: string, shaderType: number): WebGLShader {
-    let shader: WebGLShader |  null = WegGLUtilities.gl.createShader(shaderType);
-    if (!shader) throw new Error("Unable to create shader.");
+    let shader: WebGLShader | null = WegGLUtilities.gl.createShader(shaderType);
+    if (!shader) throw new Error('Unable to create shader.');
 
     WegGLUtilities.gl.shaderSource(shader, source);
     WegGLUtilities.gl.compileShader(shader);
@@ -42,13 +42,16 @@ export class Shader {
    */
   private createProgram(vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
     this.m_program = WegGLUtilities.gl.createProgram();
-    if (!this.m_program) throw new Error("Unable to create shader program.");
+    if (!this.m_program) throw new Error('Unable to create shader program.');
 
     WegGLUtilities.gl.attachShader(this.m_program, vertexShader);
     WegGLUtilities.gl.attachShader(this.m_program, fragmentShader);
     WegGLUtilities.gl.linkProgram(this.m_program);
 
-    let linked = WegGLUtilities.gl.getProgramParameter(this.m_program, WegGLUtilities.gl.LINK_STATUS);
+    let linked = WegGLUtilities.gl.getProgramParameter(
+      this.m_program,
+      WegGLUtilities.gl.LINK_STATUS
+    );
     if (!linked) {
       let error = WegGLUtilities.gl.getProgramInfoLog(this.m_program);
       WegGLUtilities.gl.deleteProgram(this.m_program);
@@ -61,15 +64,18 @@ export class Shader {
    * @throws Will throw an error if the shader program is not created.
    */
   private detectAttributes(): void {
-    if (!this.m_program) throw new Error("Shader program not created.");
-    let attributeCount = WegGLUtilities.gl.getProgramParameter(this.m_program, WegGLUtilities.gl.ACTIVE_ATTRIBUTES);
+    if (!this.m_program) throw new Error('Shader program not created.');
+    let attributeCount = WegGLUtilities.gl.getProgramParameter(
+      this.m_program,
+      WegGLUtilities.gl.ACTIVE_ATTRIBUTES
+    );
     for (let i = 0; i < attributeCount; i++) {
       let info = WegGLUtilities.gl.getActiveAttrib(this.m_program, i);
       if (!info) break;
       this.m_attributes[info.name] = WegGLUtilities.gl.getAttribLocation(this.m_program, info.name);
     }
   }
-  
+
   // public methods and attributes:
   /**
    * Creates a new shader program.
@@ -80,7 +86,10 @@ export class Shader {
   constructor(name: string, vertexShaderSource: string, fragmentShaderSource: string) {
     this.m_name = name;
     let vertexShader = this.loadShaderSource(vertexShaderSource, WegGLUtilities.gl.VERTEX_SHADER);
-    let fragmentShader = this.loadShaderSource(fragmentShaderSource, WegGLUtilities.gl.FRAGMENT_SHADER);
+    let fragmentShader = this.loadShaderSource(
+      fragmentShaderSource,
+      WegGLUtilities.gl.FRAGMENT_SHADER
+    );
     this.createProgram(vertexShader, fragmentShader);
     this.detectAttributes();
   }
@@ -90,7 +99,7 @@ export class Shader {
   }
 
   public use(): void {
-    if (!this.m_program) throw new Error("Shader program not created.");
+    if (!this.m_program) throw new Error('Shader program not created.');
     WegGLUtilities.gl.useProgram(this.m_program);
   }
 
@@ -101,8 +110,9 @@ export class Shader {
    * @returns The location of the attribute in the shader program.
    */
   public getAttributeLocation(name: string): number {
-    if (!this.m_program) throw new Error("Shader program not created.");
-    if (!(name in this.m_attributes)) throw new Error(`Attribute ${name} not found in shader ${this.m_name}.`);
+    if (!this.m_program) throw new Error('Shader program not created.');
+    if (!(name in this.m_attributes))
+      throw new Error(`Attribute ${name} not found in shader ${this.m_name}.`);
     return this.m_attributes[name];
   }
 }

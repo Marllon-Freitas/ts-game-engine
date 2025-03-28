@@ -1,5 +1,5 @@
-import { Shader } from "./webGL/shader";
-import { WegGLUtilities } from "./webGL/webGL";
+import { Shader } from './webGL/shader';
+import { WegGLUtilities } from './webGL/webGL';
 
 /**
  * The main engine class for the game.
@@ -15,10 +15,17 @@ export class Engine {
 
     WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, this.m_buffer);
 
-    if (!this.m_shader) throw new Error("Shader not loaded.");
-    let positionLocation = this.m_shader.getAttributeLocation("a_position");
+    if (!this.m_shader) throw new Error('Shader not loaded.');
+    let positionLocation = this.m_shader.getAttributeLocation('a_position');
 
-    WegGLUtilities.gl.vertexAttribPointer(positionLocation, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
+    WegGLUtilities.gl.vertexAttribPointer(
+      positionLocation,
+      3,
+      WegGLUtilities.gl.FLOAT,
+      false,
+      0,
+      0
+    );
     WegGLUtilities.gl.enableVertexAttribArray(positionLocation);
 
     WegGLUtilities.gl.drawArrays(WegGLUtilities.gl.TRIANGLES, 0, 3);
@@ -39,30 +46,33 @@ export class Engine {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
       }
     `;
-    this.m_shader = new Shader("basicShader", vertexShaderSource, fragmentShaderSource);
+    this.m_shader = new Shader('basicShader', vertexShaderSource, fragmentShaderSource);
   }
 
   private createBuffer(): void {
     this.m_buffer = WegGLUtilities.gl.createBuffer();
-    if (!this.m_buffer) throw new Error("Unable to create buffer.");
-    
+    if (!this.m_buffer) throw new Error('Unable to create buffer.');
+
     WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, this.m_buffer);
     const vertices = new Float32Array([
       // x, y, z
-      0, 0, 0,
-      0, 0.5, 0,
-      0.5, 0.5, 0,
+      0, 0, 0, 0, 0.5, 0, 0.5, 0.5, 0
     ]);
-    WegGLUtilities.gl.bufferData(WegGLUtilities.gl.ARRAY_BUFFER, vertices, WegGLUtilities.gl.STATIC_DRAW);
+    WegGLUtilities.gl.bufferData(
+      WegGLUtilities.gl.ARRAY_BUFFER,
+      vertices,
+      WegGLUtilities.gl.STATIC_DRAW
+    );
 
-    let positionLocation = this.m_shader.getAttributeLocation("a_position");
+    let positionLocation = this.m_shader.getAttributeLocation('a_position');
 
     WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, null);
     WegGLUtilities.gl.disableVertexAttribArray(positionLocation);
   }
-  
+
   // public methods and attributes:
   public constructor() {
+    // eslint-disable-next-line no-console
     console.log('Engine constructor called');
   }
 
@@ -71,7 +81,6 @@ export class Engine {
    */
   public start(): void {
     this.m_canvas = WegGLUtilities.initWebGL();
-    console.log('WebGL initialized on the canvas:', this.m_canvas);
 
     WegGLUtilities.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
