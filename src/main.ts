@@ -1,7 +1,14 @@
 import { Engine } from "./engine";
 
+let engine: Engine;
+
 // This is the main entry point for the application.
 window.onload = () => {
-  const engine = new Engine();
+  engine = new Engine();
   engine.start();
+}
+
+window.onresize = () => {
+  if (engine) 
+    engine.resize();
 }
