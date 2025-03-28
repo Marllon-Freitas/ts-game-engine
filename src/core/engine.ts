@@ -8,17 +8,25 @@ export class Engine {
   // private methods and attributes:
   private m_canvas: HTMLCanvasElement | null = null;
   private m_shader: Shader | null = null;
+  private m_buffer: WebGLBuffer | null = null;
 
   private loop(): void {
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
+
+    WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, this.m_buffer);
+    WegGLUtilities.gl.vertexAttribPointer(0, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
+    WegGLUtilities.gl.enableVertexAttribArray(0);
+
+    WegGLUtilities.gl.drawArrays(WegGLUtilities.gl.TRIANGLES, 0, 3);
+
     requestAnimationFrame(this.loop.bind(this));
   }
 
   private loadShaders(): void {
     let vertexShaderSource = `
-      attribute vec4 a_position;
+      attribute vec3 a_position;
       void main() {
-        gl_Position = a_position;
+        gl_Position = vec4(a_position, 1.0);
       }
     `;
     let fragmentShaderSource = `
@@ -28,6 +36,25 @@ export class Engine {
       }
     `;
     this.m_shader = new Shader("basicShader", vertexShaderSource, fragmentShaderSource);
+  }
+
+  private createBuffer(): void {
+    this.m_buffer = WegGLUtilities.gl.createBuffer();
+    if (!this.m_buffer) throw new Error("Unable to create buffer.");
+    
+    WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, this.m_buffer);
+    const vertices = new Float32Array([
+      // x, y, z
+      0, 0, 0,
+      0, 0.5, 0,
+      0.5, 0.5, 0,
+    ]);
+    WegGLUtilities.gl.vertexAttribPointer(0, 3, WegGLUtilities.gl.FLOAT, false, 0, 0);
+    WegGLUtilities.gl.enableVertexAttribArray(0);
+    WegGLUtilities.gl.bufferData(WegGLUtilities.gl.ARRAY_BUFFER, vertices, WegGLUtilities.gl.STATIC_DRAW);
+
+    WegGLUtilities.gl.bindBuffer(WegGLUtilities.gl.ARRAY_BUFFER, null);
+    WegGLUtilities.gl.disableVertexAttribArray(0);
   }
   
   // public methods and attributes:
@@ -47,6 +74,7 @@ export class Engine {
 
     this.loadShaders();
     this.m_shader?.use();
+    this.createBuffer();
 
     this.loop();
   }

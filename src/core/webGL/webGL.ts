@@ -24,6 +24,8 @@ export class WegGLUtilities {
     if (!canvasId) {
       canvas.id = CANVAS_ID;
       document.body.appendChild(canvas);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
 
     const gl = canvas.getContext("webgl");
