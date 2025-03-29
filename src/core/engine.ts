@@ -26,6 +26,13 @@ export class Engine {
       new Float32Array(this.m_projectionMatrix.data)
     );
 
+    let modelLocation = this.m_shader.getUniformLocation('u_model');
+    WegGLUtilities.gl.uniformMatrix4fv(
+      modelLocation,
+      false,
+      new Float32Array(Matrix4x4.translation(this.m_sprite.position).data)
+    );
+
     this.m_sprite.draw();
 
     requestAnimationFrame(this.loop.bind(this));
@@ -35,9 +42,10 @@ export class Engine {
     let vertexShaderSource = `
       attribute vec3 a_position;
       uniform mat4 u_projection;
+      uniform mat4 u_model;
 
       void main() {
-        gl_Position = u_projection * vec4(a_position, 1.0);
+        gl_Position = u_projection * u_model * vec4(a_position, 1.0);
       }
     `;
     let fragmentShaderSource = `
@@ -72,12 +80,13 @@ export class Engine {
       this.m_canvas.width,
       0,
       this.m_canvas.height,
-      -1.0,
+      -100.0,
       100.0
     );
 
     this.m_sprite = new Sprite('testSprite');
     this.m_sprite.load();
+    this.m_sprite.position.x = 200;
 
     this.loop();
   }
@@ -89,7 +98,7 @@ export class Engine {
     if (this.m_canvas) {
       this.m_canvas.width = window.innerWidth;
       this.m_canvas.height = window.innerHeight;
-      WegGLUtilities.gl.viewport(-1, 0, 0, -1);
+      WegGLUtilities.gl.viewport(-1, 1, -1, 1);
     }
   }
 }
