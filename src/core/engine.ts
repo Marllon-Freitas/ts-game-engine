@@ -1,4 +1,5 @@
 import { Sprite } from './graphics/sprite';
+import { Matrix4x4 } from './math/matrix4x4';
 import { Shader } from './webGL/shader';
 import { WegGLUtilities } from './webGL/webGL';
 
@@ -10,12 +11,20 @@ export class Engine {
   private m_canvas!: HTMLCanvasElement;
   private m_shader!: Shader;
   private m_sprite!: Sprite;
+  private m_projectionMatrix!: Matrix4x4;
 
   private loop(): void {
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
 
     let colorLocation = this.m_shader.getUniformLocation('u_color');
     WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 0.0, 1.0);
+
+    let projectionLocation = this.m_shader.getUniformLocation('u_projection');
+    WegGLUtilities.gl.uniformMatrix4fv(
+      projectionLocation,
+      false,
+      new Float32Array(this.m_projectionMatrix.data)
+    );
 
     this.m_sprite.draw();
 
@@ -25,8 +34,10 @@ export class Engine {
   private loadShaders(): void {
     let vertexShaderSource = `
       attribute vec3 a_position;
+      uniform mat4 u_projection;
+
       void main() {
-        gl_Position = vec4(a_position, 1.0);
+        gl_Position = u_projection * vec4(a_position, 1.0);
       }
     `;
     let fragmentShaderSource = `
@@ -56,7 +67,16 @@ export class Engine {
     this.loadShaders();
     this.m_shader?.use();
 
-    this.m_sprite = new Sprite('testSprite', 10, 10);
+    this.m_projectionMatrix = Matrix4x4.orthographic(
+      0,
+      this.m_canvas.width,
+      0,
+      this.m_canvas.height,
+      -1.0,
+      100.0
+    );
+
+    this.m_sprite = new Sprite('testSprite');
     this.m_sprite.load();
 
     this.loop();
@@ -69,7 +89,7 @@ export class Engine {
     if (this.m_canvas) {
       this.m_canvas.width = window.innerWidth;
       this.m_canvas.height = window.innerHeight;
-      WegGLUtilities.gl.viewport(0, 0, this.m_canvas.width, this.m_canvas.height);
+      WegGLUtilities.gl.viewport(-1, 0, 0, -1);
     }
   }
 }

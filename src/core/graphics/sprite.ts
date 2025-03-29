@@ -8,7 +8,7 @@ export class Sprite {
   private m_buffer!: WGLBuffer;
 
   // public methods and attributes:
-  constructor(name: string, width: number = 10, height: number = 10) {
+  constructor(name: string, width: number = 100, height: number = 100) {
     this.m_name = name;
     this.m_width = width;
     this.m_height = height;
@@ -24,9 +24,16 @@ export class Sprite {
     positionAttribute.size = 3;
     this.m_buffer.setAttributeLocation(positionAttribute);
 
+    // prettier-ignore
     const vertices = [
-      // x,         y,          z
-      0, 0, 0, 0, 0.5, 0, 0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, 0, 0, 0, 0, 0
+      // x, y, z
+      0, 0, 0, 
+      0, this.m_height, 0, 
+      this.m_width, this.m_height, 0, 
+      
+      this.m_width, this.m_height, 0, 
+      this.m_width, 0, 0, 
+      0, 0, 0
     ];
 
     this.m_buffer.pushBackData(vertices);
