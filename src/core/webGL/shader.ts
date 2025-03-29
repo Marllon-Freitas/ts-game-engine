@@ -9,6 +9,7 @@ export class Shader {
   private m_name: string;
   private m_program!: WebGLProgram;
   private m_attributes: { [name: string]: number } = {};
+  private m_uniforms: { [name: string]: WebGLUniformLocation | null } = {};
 
   /**
    * Loads a shader source code and compiles it.
@@ -76,6 +77,19 @@ export class Shader {
     }
   }
 
+  private detectUniforms(): void {
+    if (!this.m_program) throw new Error('Shader program not created.');
+    let uniformsCount = WegGLUtilities.gl.getProgramParameter(
+      this.m_program,
+      WegGLUtilities.gl.ACTIVE_UNIFORMS
+    );
+    for (let i = 0; i < uniformsCount; i++) {
+      let info = WegGLUtilities.gl.getActiveUniform(this.m_program, i);
+      if (!info) break;
+      this.m_uniforms[info.name] = WegGLUtilities.gl.getUniformLocation(this.m_program, info.name);
+    }
+  }
+
   // public methods and attributes:
   /**
    * Creates a new shader program.
@@ -92,6 +106,7 @@ export class Shader {
     );
     this.createProgram(vertexShader, fragmentShader);
     this.detectAttributes();
+    this.detectUniforms();
   }
 
   public get name(): string {
@@ -111,8 +126,21 @@ export class Shader {
    */
   public getAttributeLocation(name: string): number {
     if (!this.m_program) throw new Error('Shader program not created.');
-    if (!(name in this.m_attributes))
+    if (this.m_attributes[name] === undefined)
       throw new Error(`Attribute ${name} not found in shader ${this.m_name}.`);
     return this.m_attributes[name];
+  }
+
+  /**
+   * This method retrieves the location of a given uniform in the shader program
+   * @param name The name of the uniform to get the location for.
+   * @throws Will throw an error if the shader program is not created or the uniform is not found.
+   * @returns The location of the uniform in the shader program.
+   */
+  public getUniformLocation(name: string): WebGLUniformLocation | null {
+    if (!this.m_program) throw new Error('Shader program not created.');
+    if (this.m_uniforms[name] === undefined)
+      throw new Error(`Uniform ${name} not found in shader ${this.m_name}.`);
+    return this.m_uniforms[name];
   }
 }
