@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { MessagePriority } from '../../utils';
+import { MessagePriority } from '../utils';
 import { IMessageHandler } from './interfaces/IMessageHandler';
 import { Message } from './message';
 import { MessageSubscriptionNode } from './messageSubscriptionNode';

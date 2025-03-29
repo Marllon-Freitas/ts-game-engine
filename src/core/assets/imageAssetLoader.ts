@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { SUPPORTED_FILE_EXTENSIONS } from '../../utils';
+import { SUPPORTED_FILE_EXTENSIONS } from '../utils';
 import { AssetManager } from './assetManager';
 import { IAsset } from './interfaces/IAsset';
 import { IAssetLoader } from './interfaces/IAssetLoader';

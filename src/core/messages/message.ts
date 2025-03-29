@@ -1,4 +1,4 @@
-import { MessagePriority } from '../../utils';
+import { MessagePriority } from '../utils';
 import { IMessageHandler } from './interfaces/IMessageHandler';
 import { MessageManager } from './messageManager';
 
