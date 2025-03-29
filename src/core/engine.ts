@@ -1,6 +1,6 @@
+import { Sprite } from './graphics/sprite';
 import { Shader } from './webGL/shader';
 import { WegGLUtilities } from './webGL/webGL';
-import { AttributeInfo, WGLBuffer } from './webGL/wGLBuffer';
 
 /**
  * The main engine class for the game.
@@ -9,7 +9,7 @@ export class Engine {
   // private methods and attributes:
   private m_canvas!: HTMLCanvasElement;
   private m_shader!: Shader;
-  private m_buffer!: WGLBuffer;
+  private m_sprite!: Sprite;
 
   private loop(): void {
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
@@ -17,8 +17,7 @@ export class Engine {
     let colorLocation = this.m_shader.getUniformLocation('u_color');
     WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 0.0, 1.0);
 
-    this.m_buffer.bind();
-    this.m_buffer.draw();
+    this.m_sprite.draw();
 
     requestAnimationFrame(this.loop.bind(this));
   }
@@ -40,26 +39,6 @@ export class Engine {
     this.m_shader = new Shader('basicShader', vertexShaderSource, fragmentShaderSource);
   }
 
-  private createBuffer(): void {
-    this.m_buffer = new WGLBuffer(3);
-    if (!this.m_buffer) throw new Error('Unable to create buffer.');
-
-    let positionAttribute = new AttributeInfo();
-    positionAttribute.location = this.m_shader.getAttributeLocation('a_position');
-    positionAttribute.offset = 0;
-    positionAttribute.size = 3;
-    this.m_buffer.setAttributeLocation(positionAttribute);
-
-    const vertices = [
-      // x, y, z
-      0, 0, 0, 0, 0.5, 0, 0.5, 0.5, 0
-    ];
-
-    this.m_buffer.pushBackData(vertices);
-    this.m_buffer.uploadData();
-    this.m_buffer.unbind();
-  }
-
   // public methods and attributes:
   public constructor() {
     // eslint-disable-next-line no-console
@@ -76,7 +55,9 @@ export class Engine {
 
     this.loadShaders();
     this.m_shader?.use();
-    this.createBuffer();
+
+    this.m_sprite = new Sprite('testSprite', 10, 10);
+    this.m_sprite.load();
 
     this.loop();
   }
