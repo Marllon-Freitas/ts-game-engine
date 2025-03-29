@@ -17,7 +17,7 @@ export class MessageManager {
 
   // public methods and attributes:
   public static addSubscription(code: string, handler: IMessageHandler): void {
-    if (this.m_subscriptions[code] !== undefined) {
+    if (this.m_subscriptions[code] === undefined) {
       this.m_subscriptions[code] = [];
     }
 
