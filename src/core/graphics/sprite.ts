@@ -1,5 +1,4 @@
 import { Matrix4x4 } from '../math/matrix4x4';
-import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { WegGLUtilities } from '../webGL/webGL';
 import { AttributeInfo, WGLBuffer } from '../webGL/wGLBuffer';
@@ -19,8 +18,6 @@ export class Sprite {
   private m_materialName: string | null;
 
   // public methods and attributes:
-  public position: Vector3 = new Vector3();
-
   constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
     this.m_name = name;
     this.m_width = width;
@@ -75,13 +72,9 @@ export class Sprite {
     this.m_buffer.unbind();
   }
 
-  public draw(shader: Shader): void {
+  public draw(shader: Shader, modelMatrix: Matrix4x4): void {
     let modelLocation = shader.getUniformLocation('u_model');
-    WegGLUtilities.gl.uniformMatrix4fv(
-      modelLocation,
-      false,
-      new Float32Array(Matrix4x4.translation(this.position).data)
-    );
+    WegGLUtilities.gl.uniformMatrix4fv(modelLocation, false, modelMatrix.toFloat32Array());
 
     let colorLocation = shader.getUniformLocation('u_tint');
     if (this.m_material) {

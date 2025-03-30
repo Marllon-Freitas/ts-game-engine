@@ -2,11 +2,11 @@ import { AssetManager } from './assets/assetManager';
 import { Color } from './graphics/color';
 import { Material } from './graphics/material';
 import { MaterialManager } from './graphics/materialManager';
-import { Sprite } from './graphics/sprite';
 import { Matrix4x4 } from './math/matrix4x4';
 import { MessageManager } from './messages/messageManager';
 import { BasicShader } from './webGL/shaders/basicShader';
 import { WegGLUtilities } from './webGL/webGL';
+import { LevelManager } from './world/levelManager';
 
 /**
  * The main engine class for the game.
@@ -15,20 +15,16 @@ export class Engine {
   // private methods and attributes:
   private m_canvas!: HTMLCanvasElement;
   private m_basicShader!: BasicShader;
-  private m_sprite!: Sprite;
   private m_projectionMatrix!: Matrix4x4;
 
   private loop(): void {
     MessageManager.update();
-    this.m_projectionMatrix = Matrix4x4.orthographic(
-      0,
-      this.m_canvas.width,
-      this.m_canvas.height,
-      0,
-      -100.0,
-      100.0
-    );
+
+    LevelManager.update(0);
+
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
+
+    LevelManager.render(this.m_basicShader);
 
     let projectionLocation = this.m_basicShader.getUniformLocation('u_projection');
     WegGLUtilities.gl.uniformMatrix4fv(
@@ -36,8 +32,6 @@ export class Engine {
       false,
       new Float32Array(this.m_projectionMatrix.data)
     );
-
-    this.m_sprite.draw(this.m_basicShader);
 
     requestAnimationFrame(this.loop.bind(this));
   }
@@ -69,9 +63,8 @@ export class Engine {
       )
     );
 
-    this.m_sprite = new Sprite('testSprite', 'testMaterial');
-    this.m_sprite.load();
-    this.m_sprite.position.x = 200;
+    let levelId = LevelManager.createTestLevel();
+    LevelManager.changeLevel(levelId);
 
     this.resize();
     this.loop();
