@@ -1,3 +1,4 @@
+import { BaseComponent } from '../components/baseComponent';
 import { Matrix4x4 } from '../math/matrix4x4';
 import { Transform } from '../math/transform';
 import { Shader } from '../webGL/shader';
@@ -6,15 +7,24 @@ import { Scene } from './scene';
 export class SimObject {
   // private methods and attributes:
   private m_id: number;
-  private m_children!: SimObject[];
+  private m_children: SimObject[] = [];
   private m_parent!: SimObject | null;
   private m_isLoaded: boolean = false;
   private m_scene!: Scene | null;
+  private m_components: BaseComponent[] = [];
   private m_localMatrix: Matrix4x4 = Matrix4x4.identity();
   private m_worldMatrix: Matrix4x4 = Matrix4x4.identity();
 
   protected onAdded(scene: Scene): void {
     this.m_scene = scene;
+  }
+
+  private updateWorldMatrix(parentWorldMatrix: Matrix4x4 | null): void {
+    if (parentWorldMatrix) {
+      this.m_worldMatrix = Matrix4x4.multiply(parentWorldMatrix, this.m_localMatrix);
+    } else {
+      this.m_worldMatrix.copyFrom(this.m_localMatrix);
+    }
   }
 
   // public methods and attributes:
@@ -68,8 +78,17 @@ export class SimObject {
     return null;
   }
 
+  public addComponent(component: BaseComponent): void {
+    component.setOwner(this);
+    this.m_components.push(component);
+  }
+
   public load(): void {
     this.m_isLoaded = true;
+
+    for (const component of this.m_components) {
+      component.load();
+    }
 
     for (const child of this.m_children) {
       child.load();
@@ -77,12 +96,21 @@ export class SimObject {
   }
 
   public update(deltaTime: number): void {
+    this.m_localMatrix = this.transform.getTransformMatrix();
+    this.updateWorldMatrix(this.m_parent ? this.m_parent.worldMatrix : null);
+
+    for (const component of this.m_components) {
+      component.update(deltaTime);
+    }
     for (const child of this.m_children) {
       child.update(deltaTime);
     }
   }
 
   public render(shader: Shader): void {
+    for (const component of this.m_components) {
+      component.render(shader);
+    }
     for (const child of this.m_children) {
       child.render(shader);
     }
