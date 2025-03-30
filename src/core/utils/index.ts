@@ -1,5 +1,3 @@
-export const CANVAS_ID = 'gameCanvas';
-
 // messages
 export enum MessagePriority {
   NORMAL,

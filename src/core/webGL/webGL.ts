@@ -1,5 +1,3 @@
-import { CANVAS_ID } from '../utils';
-
 /**
  * Responsible for setting up and managing WebGL rendering contexts.
  */
