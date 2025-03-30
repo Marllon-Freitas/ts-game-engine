@@ -62,7 +62,11 @@ export class Engine {
     this.m_basicShader?.use();
 
     MaterialManager.registerMaterial(
-      new Material('testMaterial', '/assets/textures/wood-texture.png', new Color(180, 30, 10, 255))
+      new Material(
+        'testMaterial',
+        '/assets/textures/wood-texture.png',
+        new Color(255, 255, 255, 255)
+      )
     );
 
     this.m_sprite = new Sprite('testSprite', 'testMaterial');
