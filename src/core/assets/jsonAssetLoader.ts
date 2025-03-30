@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { AssetManager } from './assetManager';
 import { IAsset } from './interfaces/IAsset';
@@ -7,9 +8,9 @@ export class JSONAsset implements IAsset {
   public readonly name: string;
   public readonly data: any;
 
-  constructor(name: string, image: unknown) {
+  constructor(name: string, data: any) {
     this.name = name;
-    this.data = image;
+    this.data = data;
   }
 }
 
