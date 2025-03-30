@@ -14,7 +14,11 @@ export class Transform {
 
   public getTransformMatrix(): Matrix4x4 {
     let translationMatrix: Matrix4x4 = Matrix4x4.translation(this.position);
-    let rotationMatrix: Matrix4x4 = Matrix4x4.rotationZ(this.rotation.z);
+    let rotationMatrix: Matrix4x4 = Matrix4x4.rotationXYZ(
+      this.rotation.x,
+      this.rotation.y,
+      this.rotation.z
+    );
     let scaleMatrix: Matrix4x4 = Matrix4x4.scale(this.scale);
 
     // multiply matrices in the order: translation -> rotation -> scale

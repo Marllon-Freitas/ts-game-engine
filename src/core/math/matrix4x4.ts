@@ -50,6 +50,32 @@ export class Matrix4x4 {
     return matrix;
   }
 
+  public static rotationX(angleInRadians: number): Matrix4x4 {
+    const matrix = new Matrix4x4();
+    const cos = Math.cos(angleInRadians);
+    const sin = Math.sin(angleInRadians);
+
+    matrix.m_data[5] = cos;
+    matrix.m_data[6] = sin;
+    matrix.m_data[9] = -sin;
+    matrix.m_data[10] = cos;
+
+    return matrix;
+  }
+
+  public static rotationY(angleInRadians: number): Matrix4x4 {
+    const matrix = new Matrix4x4();
+    const cos = Math.cos(angleInRadians);
+    const sin = Math.sin(angleInRadians);
+
+    matrix.m_data[0] = cos;
+    matrix.m_data[2] = -sin;
+    matrix.m_data[8] = sin;
+    matrix.m_data[10] = cos;
+
+    return matrix;
+  }
+
   public static rotationZ(angleInRadians: number): Matrix4x4 {
     const matrix = new Matrix4x4();
     const cos = Math.cos(angleInRadians);
@@ -61,6 +87,19 @@ export class Matrix4x4 {
     matrix.m_data[5] = cos;
 
     return matrix;
+  }
+
+  public static rotationXYZ(
+    angleInRadiansX: number,
+    angleInRadiansY: number,
+    angleInRadiansZ: number
+  ): Matrix4x4 {
+    const matrixX = Matrix4x4.rotationX(angleInRadiansX);
+    const matrixY = Matrix4x4.rotationY(angleInRadiansY);
+    const matrixZ = Matrix4x4.rotationZ(angleInRadiansZ);
+
+    // multiply matrices in the order: Z -> Y -> X
+    return Matrix4x4.multiply(Matrix4x4.multiply(matrixZ, matrixY), matrixX);
   }
 
   public static multiply(a: Matrix4x4, b: Matrix4x4): Matrix4x4 {
@@ -126,5 +165,13 @@ export class Matrix4x4 {
     matrix.m_data[10] = scale.z;
 
     return matrix;
+  }
+
+  public copyFrom(matrix: Matrix4x4): void {
+    this.m_data = [...matrix.m_data];
+  }
+
+  public toFloat32Array(): Float32Array {
+    return new Float32Array(this.m_data);
   }
 }
