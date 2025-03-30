@@ -1,3 +1,4 @@
+import { Matrix4x4 } from '../math/matrix4x4';
 import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { WegGLUtilities } from '../webGL/webGL';
@@ -73,6 +74,17 @@ export class Sprite {
   }
 
   public draw(shader: Shader): void {
+    let modelLocation = shader.getUniformLocation('u_model');
+    WegGLUtilities.gl.uniformMatrix4fv(
+      modelLocation,
+      false,
+      new Float32Array(Matrix4x4.translation(this.position).data)
+    );
+
+    let colorLocation = shader.getUniformLocation('u_tint');
+    //WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 0.0, 1.0);
+    WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 1.0, 1.0);
+
     this.m_texture.activateAndBind(0);
 
     let diffuseLocation = shader.getUniformLocation('u_diffuse');

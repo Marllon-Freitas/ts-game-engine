@@ -4,7 +4,7 @@ import { WegGLUtilities } from './webGL';
  * Shader class for managing WebGL shaders.
  * This class is responsible for loading, compiling, and linking shaders.
  */
-export class Shader {
+export abstract class Shader {
   // private methods and attributes:
   private m_name: string;
   private m_program!: WebGLProgram;
@@ -90,15 +90,7 @@ export class Shader {
     }
   }
 
-  // public methods and attributes:
-  /**
-   * Creates a new shader program.
-   * @param name The name of the shader.
-   * @param vertexShaderSource The source code for the vertex shader.
-   * @param fragmentShaderSource The source code for the fragment shader.
-   */
-  constructor(name: string, vertexShaderSource: string, fragmentShaderSource: string) {
-    this.m_name = name;
+  protected load(vertexShaderSource: string, fragmentShaderSource: string): void {
     let vertexShader = this.loadShaderSource(vertexShaderSource, WegGLUtilities.gl.VERTEX_SHADER);
     let fragmentShader = this.loadShaderSource(
       fragmentShaderSource,
@@ -107,6 +99,15 @@ export class Shader {
     this.createProgram(vertexShader, fragmentShader);
     this.detectAttributes();
     this.detectUniforms();
+  }
+
+  // public methods and attributes:
+  /**
+   * Creates a new shader program.
+   * @param name The name of the shader.
+   */
+  constructor(name: string) {
+    this.m_name = name;
   }
 
   public get name(): string {
