@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Vector3 class
  * Represents a 3D vector with x, y, and z components.
@@ -59,5 +60,11 @@ export class Vector3 {
     this.m_x = vector.m_x;
     this.m_y = vector.m_y;
     this.m_z = vector.m_z;
+  }
+
+  public setFromJson(json: any): void {
+    if (json.x !== undefined) this.m_x = Number(json.x);
+    if (json.y !== undefined) this.m_y = Number(json.y);
+    if (json.z !== undefined) this.m_z = Number(json.z);
   }
 }

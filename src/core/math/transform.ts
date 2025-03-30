@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Matrix4x4 } from './matrix4x4';
 import { Vector3 } from './vector3';
 
@@ -23,5 +24,11 @@ export class Transform {
 
     // multiply matrices in the order: translation -> rotation -> scale
     return Matrix4x4.multiply(Matrix4x4.multiply(translationMatrix, rotationMatrix), scaleMatrix);
+  }
+
+  public setFromJson(json: any): void {
+    if (json.position !== undefined) this.position.setFromJson(json.position);
+    if (json.rotation !== undefined) this.rotation.setFromJson(json.rotation);
+    if (json.scale !== undefined) this.scale.setFromJson(json.scale);
   }
 }

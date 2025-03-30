@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Vector2 class
  * This class represents a 2D vector with x and y coordinates.
@@ -35,5 +36,10 @@ export class Vector2 {
 
   public toFloat32Array(): Float32Array {
     return new Float32Array(this.toArray());
+  }
+
+  public setFromJson(json: any): void {
+    if (json.x !== undefined) this.m_x = Number(json.x);
+    if (json.y !== undefined) this.m_y = Number(json.y);
   }
 }

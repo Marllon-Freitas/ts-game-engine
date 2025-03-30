@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LevelStates } from '../utils';
 import { Shader } from '../webGL/shader';
 import { Scene } from './scene';
+import { SimObject } from './simObject';
 
 export class Level {
   // private methods and attributes:
@@ -9,6 +11,29 @@ export class Level {
   private m_description: string;
   private m_scene: Scene;
   private m_state: LevelStates = LevelStates.UNINITIALIZED;
+  private m_globalId: number = -1;
+
+  private loadSimObject(dataSection: any, parent: SimObject | null): void {
+    let name: string = dataSection.name || 'UnnamedObject';
+
+    this.m_globalId++;
+    let simObject = new SimObject(this.m_globalId, name, this.m_scene);
+
+    if (dataSection.transform) {
+      simObject.transform.setFromJson(dataSection.transform);
+    }
+
+    if (dataSection.object) {
+      for (let objectData in dataSection.children) {
+        let object = dataSection.children[objectData];
+        this.loadSimObject(object, simObject);
+      }
+    }
+
+    if (parent) {
+      parent.addChild(simObject);
+    }
+  }
 
   // public methods and attributes:
   constructor(id: number, name: string, description: string) {
@@ -55,4 +80,14 @@ export class Level {
 
   // TODO:
   public onDeactivated(): void {}
+
+  public initialize(levelData: any): void {
+    if (!levelData.object) throw new Error('Level data does not contain object information.');
+
+    for (const objectData in levelData.object) {
+      const object = levelData.object[objectData];
+
+      this.loadSimObject(object, this.m_scene.rootNode);
+    }
+  }
 }

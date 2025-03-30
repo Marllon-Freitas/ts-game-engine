@@ -3,6 +3,7 @@ import { Message } from '../messages/message';
 import { ImageAssetLoader } from './imageAssetLoader';
 import { IAsset } from './interfaces/IAsset';
 import { IAssetLoader } from './interfaces/IAssetLoader';
+import { JSONAssetLoader } from './jsonAssetLoader';
 
 export class AssetManager {
   // private methods and attributes:
@@ -14,6 +15,7 @@ export class AssetManager {
   // public methods and attributes:
   public static initialize(): void {
     AssetManager.m_loaders.push(new ImageAssetLoader());
+    AssetManager.m_loaders.push(new JSONAssetLoader());
   }
 
   public static registerAssetLoader(loader: IAssetLoader): void {

@@ -49,6 +49,7 @@ export class Engine {
     this.m_canvas = WegGLUtilities.initWebGL();
 
     AssetManager.initialize();
+    LevelManager.initialize();
 
     WegGLUtilities.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -63,8 +64,7 @@ export class Engine {
       )
     );
 
-    let levelId = LevelManager.createTestLevel();
-    LevelManager.changeLevel(levelId);
+    LevelManager.changeLevel(0);
 
     this.resize();
     this.loop();
