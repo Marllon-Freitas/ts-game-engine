@@ -17,6 +17,14 @@ export class Engine {
 
   private loop(): void {
     MessageManager.update();
+    this.m_projectionMatrix = Matrix4x4.orthographic(
+      0,
+      this.m_canvas.width,
+      this.m_canvas.height,
+      0,
+      -100.0,
+      100.0
+    );
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
 
     let colorLocation = this.m_shader.getUniformLocation('u_tint');
@@ -91,19 +99,11 @@ export class Engine {
     this.loadShaders();
     this.m_shader?.use();
 
-    this.m_projectionMatrix = Matrix4x4.orthographic(
-      0,
-      this.m_canvas.width,
-      0,
-      this.m_canvas.height,
-      -100.0,
-      100.0
-    );
-
-    this.m_sprite = new Sprite('testSprite', 'public/assets/textures/wood-texture.png');
+    this.m_sprite = new Sprite('testSprite', '/assets/textures/wood-texture.png');
     this.m_sprite.load();
     this.m_sprite.position.x = 200;
 
+    this.resize();
     this.loop();
   }
 
@@ -114,7 +114,15 @@ export class Engine {
     if (this.m_canvas) {
       this.m_canvas.width = window.innerWidth;
       this.m_canvas.height = window.innerHeight;
-      WegGLUtilities.gl.viewport(-1, 1, -1, 1);
+      WegGLUtilities.gl.viewport(0, 0, this.m_canvas.width, this.m_canvas.height);
+      this.m_projectionMatrix = Matrix4x4.orthographic(
+        0,
+        this.m_canvas.width,
+        this.m_canvas.height,
+        0,
+        -100.0,
+        100.0
+      );
     }
   }
 }

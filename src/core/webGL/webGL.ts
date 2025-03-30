@@ -22,10 +22,7 @@ export class WegGLUtilities {
     if (!canvas) throw new Error(`Canvas with ID ${canvasId} not found.`);
 
     if (!canvasId) {
-      canvas.id = CANVAS_ID;
       document.body.appendChild(canvas);
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
     }
 
     const gl = canvas.getContext('webgl');
