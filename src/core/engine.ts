@@ -1,4 +1,7 @@
 import { AssetManager } from './assets/assetManager';
+import { Color } from './graphics/color';
+import { Material } from './graphics/material';
+import { MaterialManager } from './graphics/materialManager';
 import { Sprite } from './graphics/sprite';
 import { Matrix4x4 } from './math/matrix4x4';
 import { MessageManager } from './messages/messageManager';
@@ -58,7 +61,11 @@ export class Engine {
     this.m_basicShader = new BasicShader();
     this.m_basicShader?.use();
 
-    this.m_sprite = new Sprite('testSprite', '/assets/textures/wood-texture.png');
+    MaterialManager.registerMaterial(
+      new Material('testMaterial', '/assets/textures/wood-texture.png', new Color(180, 30, 10, 255))
+    );
+
+    this.m_sprite = new Sprite('testSprite', 'testMaterial');
     this.m_sprite.load();
     this.m_sprite.position.x = 200;
 

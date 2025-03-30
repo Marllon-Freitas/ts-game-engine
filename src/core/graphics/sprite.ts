@@ -3,8 +3,8 @@ import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { WegGLUtilities } from '../webGL/webGL';
 import { AttributeInfo, WGLBuffer } from '../webGL/wGLBuffer';
-import { Texture } from './texture';
-import { TextureManager } from './textureManager';
+import { Material } from './material';
+import { MaterialManager } from './materialManager';
 
 /**
  * The Sprite class represents a 2D sprite in the game engine.
@@ -15,18 +15,18 @@ export class Sprite {
   private m_width: number;
   private m_height: number;
   private m_buffer!: WGLBuffer;
-  private m_texture: Texture;
-  private m_textureName: string;
+  private m_material: Material | null;
+  private m_materialName: string | null;
 
   // public methods and attributes:
   public position: Vector3 = new Vector3();
 
-  constructor(name: string, textureName: string, width: number = 100, height: number = 100) {
+  constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
     this.m_name = name;
     this.m_width = width;
     this.m_height = height;
-    this.m_textureName = textureName;
-    this.m_texture = TextureManager.getTexture(textureName);
+    this.m_materialName = materialName;
+    this.m_material = MaterialManager.getMaterial(this.m_materialName);
   }
 
   public get name(): string {
@@ -36,7 +36,9 @@ export class Sprite {
   public destroy(): void {
     if (this.m_buffer) {
       this.m_buffer.destroy();
-      TextureManager.releaseTexture(this.m_textureName);
+      if (this.m_materialName) MaterialManager.releaseMaterial(this.m_materialName);
+      this.m_material = null;
+      this.m_materialName = null;
     }
   }
 
@@ -82,13 +84,15 @@ export class Sprite {
     );
 
     let colorLocation = shader.getUniformLocation('u_tint');
-    //WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 0.0, 1.0);
-    WegGLUtilities.gl.uniform4f(colorLocation, 1.0, 1.0, 1.0, 1.0);
+    if (this.m_material) {
+      WegGLUtilities.gl.uniform4fv(colorLocation, this.m_material.tint.toFloat32Array());
 
-    this.m_texture.activateAndBind(0);
-
-    let diffuseLocation = shader.getUniformLocation('u_diffuse');
-    WegGLUtilities.gl.uniform1i(diffuseLocation, 0);
+      if (this.m_material.diffuseTexture) {
+        this.m_material.diffuseTexture.activateAndBind(0);
+        let diffuseLocation = shader.getUniformLocation('u_diffuse');
+        WegGLUtilities.gl.uniform1i(diffuseLocation, 0);
+      }
+    }
 
     this.m_buffer.bind();
     this.m_buffer.draw();
