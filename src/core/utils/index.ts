@@ -14,3 +14,14 @@ export enum LevelStates {
   LOADING,
   UPDATING
 }
+
+// input
+export enum Keys {
+  LEFT = 37,
+  UP = 38,
+  RIGHT = 39,
+  DOWN = 40
+}
+
+export const MESSAGE_MOUSE_UP = 'MOUSE_UP';
+export const MESSAGE_MOUSE_DOWN = 'MOUSE_DOWN';

@@ -12,6 +12,8 @@ export class RotationBehaviorData implements IBehaviorData {
   public setFromJSON(json: any): void {
     if (!json.name) throw new Error('RotationBehaviorData: name is required');
 
+    this.name = String(json.name);
+
     if (json.rotation) this.rotation.setFromJson(json.rotation);
   }
 }

@@ -3,8 +3,12 @@ import { initializeComponents } from './components/init';
 import { Color } from './graphics/color';
 import { Material } from './graphics/material';
 import { MaterialManager } from './graphics/materialManager';
+import { InputManager, MouseContext } from './input/inputManager';
 import { Matrix4x4 } from './math/matrix4x4';
+import { IMessageHandler } from './messages/interfaces/IMessageHandler';
+import { Message } from './messages/message';
 import { MessageManager } from './messages/messageManager';
+import { MESSAGE_MOUSE_UP } from './utils';
 import { BasicShader } from './webGL/shaders/basicShader';
 import { WegGLUtilities } from './webGL/webGL';
 import { LevelManager } from './world/levelManager';
@@ -12,7 +16,7 @@ import { LevelManager } from './world/levelManager';
 /**
  * The main engine class for the game.
  */
-export class Engine {
+export class Engine implements IMessageHandler {
   // private methods and attributes:
   private m_canvas!: HTMLCanvasElement;
   private m_basicShader!: BasicShader;
@@ -62,7 +66,10 @@ export class Engine {
     initializeComponents();
 
     AssetManager.initialize();
+    InputManager.initialize();
     LevelManager.initialize();
+
+    Message.subscribe(MESSAGE_MOUSE_UP, this);
 
     WegGLUtilities.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     WegGLUtilities.gl.enable(WegGLUtilities.gl.BLEND);
@@ -101,6 +108,13 @@ export class Engine {
         -100.0,
         100.0
       );
+    }
+  }
+
+  public onMessage(message: Message): void {
+    if (message.code === MESSAGE_MOUSE_UP) {
+      let context = message.context as MouseContext;
+      document.title = `Mouse Pos: [${context.position.x}, ${context.position.y}]`;
     }
   }
 }
