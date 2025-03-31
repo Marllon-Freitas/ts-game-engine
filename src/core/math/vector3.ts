@@ -67,4 +67,32 @@ export class Vector3 {
     if (json.y !== undefined) this.m_y = Number(json.y);
     if (json.z !== undefined) this.m_z = Number(json.z);
   }
+
+  public add(vector: Vector3): Vector3 {
+    this.m_x += vector.m_x;
+    this.m_y += vector.m_y;
+    this.m_z += vector.m_z;
+    return this;
+  }
+
+  public subtract(vector: Vector3): Vector3 {
+    this.m_x -= vector.m_x;
+    this.m_y -= vector.m_y;
+    this.m_z -= vector.m_z;
+    return this;
+  }
+
+  public multiply(vector: Vector3): Vector3 {
+    this.m_x *= vector.m_x;
+    this.m_y *= vector.m_y;
+    this.m_z *= vector.m_z;
+    return this;
+  }
+
+  public divide(vector: Vector3): Vector3 {
+    this.m_x /= vector.m_x;
+    this.m_y /= vector.m_y;
+    this.m_z /= vector.m_z;
+    return this;
+  }
 }
