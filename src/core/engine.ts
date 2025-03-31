@@ -17,12 +17,23 @@ export class Engine {
   private m_canvas!: HTMLCanvasElement;
   private m_basicShader!: BasicShader;
   private m_projectionMatrix!: Matrix4x4;
+  private m_previousTime: number = 0;
 
   private loop(): void {
+    this.update();
+    this.render();
+  }
+
+  private update(): void {
+    let delta = performance.now() - this.m_previousTime;
     MessageManager.update();
 
-    LevelManager.update(0);
+    LevelManager.update(delta);
 
+    this.m_previousTime = performance.now();
+  }
+
+  private render(): void {
     WegGLUtilities.gl.clear(WegGLUtilities.gl.COLOR_BUFFER_BIT);
 
     LevelManager.render(this.m_basicShader);
@@ -54,16 +65,18 @@ export class Engine {
     LevelManager.initialize();
 
     WegGLUtilities.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    WegGLUtilities.gl.enable(WegGLUtilities.gl.BLEND);
+    WegGLUtilities.gl.blendFunc(WegGLUtilities.gl.SRC_ALPHA, WegGLUtilities.gl.ONE_MINUS_SRC_ALPHA);
 
     this.m_basicShader = new BasicShader();
     this.m_basicShader?.use();
 
     MaterialManager.registerMaterial(
-      new Material(
-        'testMaterial',
-        '/assets/textures/wood-texture.png',
-        new Color(255, 255, 255, 255)
-      )
+      new Material('testMaterial', '/assets/textures/wood-texture.png', Color.WHITE())
+    );
+
+    MaterialManager.registerMaterial(
+      new Material('ball', '/assets/textures/ball-Sheet.png', Color.WHITE())
     );
 
     LevelManager.changeLevel(0);

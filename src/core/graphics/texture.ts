@@ -45,12 +45,19 @@ export class Texture implements IMessageHandler {
         WegGLUtilities.gl.TEXTURE_WRAP_T,
         WegGLUtilities.gl.CLAMP_TO_EDGE
       );
-      WegGLUtilities.gl.texParameteri(
-        WegGLUtilities.gl.TEXTURE_2D,
-        WegGLUtilities.gl.TEXTURE_MIN_FILTER,
-        WegGLUtilities.gl.LINEAR
-      );
     }
+
+    WegGLUtilities.gl.texParameteri(
+      WegGLUtilities.gl.TEXTURE_2D,
+      WegGLUtilities.gl.TEXTURE_MIN_FILTER,
+      WegGLUtilities.gl.NEAREST
+    );
+
+    WegGLUtilities.gl.texParameteri(
+      WegGLUtilities.gl.TEXTURE_2D,
+      WegGLUtilities.gl.TEXTURE_MAG_FILTER,
+      WegGLUtilities.gl.NEAREST
+    );
 
     this.m_isLoaded = true;
   }

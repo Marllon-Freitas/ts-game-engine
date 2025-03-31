@@ -42,4 +42,17 @@ export class Vector2 {
     if (json.x !== undefined) this.m_x = Number(json.x);
     if (json.y !== undefined) this.m_y = Number(json.y);
   }
+
+  public static get zero(): Vector2 {
+    return new Vector2();
+  }
+
+  public static get one(): Vector2 {
+    return new Vector2(1, 1);
+  }
+
+  public copyFrom(vector: Vector2): void {
+    this.m_x = vector.m_x;
+    this.m_y = vector.m_y;
+  }
 }

@@ -4,18 +4,20 @@ import { WegGLUtilities } from '../webGL/webGL';
 import { AttributeInfo, WGLBuffer } from '../webGL/wGLBuffer';
 import { Material } from './material';
 import { MaterialManager } from './materialManager';
+import { Vertex } from './vertex';
 
 /**
  * The Sprite class represents a 2D sprite in the game engine.
  */
 export class Sprite {
   // private methods and attributes:
-  private m_name: string;
-  private m_width: number;
-  private m_height: number;
-  private m_buffer!: WGLBuffer;
-  private m_material: Material | null;
-  private m_materialName: string | null;
+  protected m_name: string;
+  protected m_width: number;
+  protected m_height: number;
+  protected m_buffer!: WGLBuffer;
+  protected m_material: Material | null;
+  protected m_materialName: string | null;
+  protected m_vertices: Vertex[] = [];
 
   // public methods and attributes:
   constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
@@ -54,18 +56,21 @@ export class Sprite {
     this.m_buffer.setAttributeLocation(textCoordAttribute);
 
     // prettier-ignore
-    const vertices = [
+    this.m_vertices = [
       // x, y, z,   u, v
-      0, 0, 0, 0, 0,
-      0, this.m_height, 0, 0, 1.0,
-      this.m_width, this.m_height, 0, 1.0, 1.0, 
+      new Vertex(0, 0, 0, 0, 0),
+      new Vertex(0, this.m_height, 0, 0, 1.0),
+      new Vertex(this.m_width, this.m_height, 0, 1.0, 1.0,),
       
-      this.m_width, this.m_height, 0, 1.0, 1.0,
-      this.m_width, 0, 0, 1.0, 0,
-      0, 0, 0, 0, 0,
+      new Vertex(this.m_width, this.m_height, 0, 1.0, 1.0),
+      new Vertex(this.m_width, 0, 0, 1.0, 0),
+      new Vertex(0, 0, 0, 0, 0)
     ];
 
-    this.m_buffer.pushBackData(vertices);
+    for (let vertices of this.m_vertices) {
+      this.m_buffer.pushBackData(vertices.toArray());
+    }
+
     this.m_buffer.uploadData();
     this.m_buffer.unbind();
   }
@@ -88,4 +93,6 @@ export class Sprite {
     this.m_buffer.bind();
     this.m_buffer.draw();
   }
+
+  public update(deltaTime: number): void {}
 }

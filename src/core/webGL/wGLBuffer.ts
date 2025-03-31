@@ -97,6 +97,19 @@ export class WGLBuffer {
     this.m_data.push(...data);
   }
 
+  public clearData(): void {
+    this.m_data = [];
+  }
+
+  /**
+   * Resets the buffer data with the provided data.
+   * @param data The data to set in the buffer.
+   */
+  public setData(data: number[]): void {
+    this.clearData();
+    this.pushBackData(data);
+  }
+
   public uploadData(): void {
     WegGLUtilities.gl.bindBuffer(this.m_targetBufferType, this.m_buffer);
     let bufferData: ArrayBuffer;
