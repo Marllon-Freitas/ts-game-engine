@@ -40,18 +40,16 @@ export class Sprite {
   }
 
   public load(): void {
-    this.m_buffer = new WGLBuffer(5);
+    this.m_buffer = new WGLBuffer();
     if (!this.m_buffer) throw new Error('Unable to create buffer.');
 
     let positionAttribute = new AttributeInfo();
     positionAttribute.location = 0;
-    positionAttribute.offset = 0;
     positionAttribute.size = 3;
     this.m_buffer.setAttributeLocation(positionAttribute);
 
     let textCoordAttribute = new AttributeInfo();
     textCoordAttribute.location = 1;
-    textCoordAttribute.offset = 3;
     textCoordAttribute.size = 2;
     this.m_buffer.setAttributeLocation(textCoordAttribute);
 

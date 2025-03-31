@@ -6,7 +6,7 @@ import { WegGLUtilities } from './webGL';
 export class AttributeInfo {
   public location!: number;
   public size!: number;
-  public offset!: number;
+  public offset: number = 0;
 }
 
 /**
@@ -16,7 +16,7 @@ export class WGLBuffer {
   // private methods and attributes:
   private m_hasAttributeLocation: boolean = false;
   private m_elementSize: number;
-  private m_stride: number;
+  private m_stride!: number;
   private m_buffer: WebGLBuffer;
   private m_targetBufferType: number;
   private m_dataType: number;
@@ -28,18 +28,16 @@ export class WGLBuffer {
   // public methods and attributes:
   /**
    * Creates a new WebGLBuffer instance.
-   * @param elementSize The size of each element in the buffer.
    * @param dataType The data type of the buffer elements (e.g., FLOAT, INT). Default is FLOAT.
    * @param targetBufferType The target buffer type (e.g., ARRAY_BUFFER, ELEMENT_ARRAY_BUFFER). Default is ARRAY_BUFFER.
    * @param m_mode The drawing mode (e.g., LINES, TRIANGLES). Default is TRIANGLES.
    */
   constructor(
-    elementSize: number,
     dataType: number = WegGLUtilities.gl.FLOAT,
     targetBufferType: number = WegGLUtilities.gl.ARRAY_BUFFER,
     m_mode: number = WegGLUtilities.gl.TRIANGLES
   ) {
-    this.m_elementSize = elementSize;
+    this.m_elementSize = 0;
     this.m_dataType = dataType;
     this.m_targetBufferType = targetBufferType;
     this.m_mode = m_mode;
@@ -62,7 +60,6 @@ export class WGLBuffer {
         throw new Error(`Unsupported data type: ${dataType.toString()}`);
     }
 
-    this.m_stride = this.m_elementSize * this.m_typeSize;
     this.m_buffer = WegGLUtilities.gl.createBuffer();
   }
 
@@ -143,7 +140,10 @@ export class WGLBuffer {
    */
   public setAttributeLocation(attributeInfo: AttributeInfo): void {
     this.m_hasAttributeLocation = true;
+    attributeInfo.offset = this.m_elementSize;
     this.m_attributes.push(attributeInfo);
+    this.m_elementSize += attributeInfo.size;
+    this.m_stride = this.m_elementSize * this.m_typeSize;
   }
 
   public draw(): void {
