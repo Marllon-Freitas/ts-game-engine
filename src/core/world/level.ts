@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { BehaviorManager } from '../behaviors/behaviorManager';
 import { ComponentManager } from '../components/componentManager';
 import { LevelStates } from '../utils';
 import { Shader } from '../webGL/shader';
@@ -29,6 +30,14 @@ export class Level {
         let data = dataSection.components[componentData];
         let component = ComponentManager.extractComponent(data);
         simObject.addComponent(component);
+      }
+    }
+
+    if (dataSection.behaviors) {
+      for (let behaviorData in dataSection.behaviors) {
+        let data = dataSection.behaviors[behaviorData];
+        let behavior = BehaviorManager.extractBehavior(data);
+        simObject.addBehavior(behavior);
       }
     }
 

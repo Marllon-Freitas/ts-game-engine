@@ -1,3 +1,4 @@
+import { IBehavior } from '../behaviors/interfaces/IBehavior';
 import { IComponent } from '../components/interfaces/IComponent';
 import { Matrix4x4 } from '../math/matrix4x4';
 import { Transform } from '../math/transform';
@@ -12,6 +13,7 @@ export class SimObject {
   private m_isLoaded: boolean = false;
   private m_scene!: Scene | null;
   private m_components: IComponent[] = [];
+  private m_behaviors: IBehavior[] = [];
   private m_localMatrix: Matrix4x4 = Matrix4x4.identity();
   private m_worldMatrix: Matrix4x4 = Matrix4x4.identity();
 
@@ -83,6 +85,11 @@ export class SimObject {
     this.m_components.push(component);
   }
 
+  public addBehavior(behavior: IBehavior): void {
+    behavior.setOwner(this);
+    this.m_behaviors.push(behavior);
+  }
+
   public load(): void {
     this.m_isLoaded = true;
 
@@ -101,6 +108,9 @@ export class SimObject {
 
     for (const component of this.m_components) {
       component.update(deltaTime);
+    }
+    for (const behavior of this.m_behaviors) {
+      behavior.update(deltaTime);
     }
     for (const child of this.m_children) {
       child.update(deltaTime);

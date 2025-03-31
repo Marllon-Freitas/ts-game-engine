@@ -26,6 +26,15 @@
               "name": "TestSprite",
               "material": "testMaterial"
             }
+          ],
+          "behaviors": [
+            {
+              "name": "rotateX",
+              "type": "rotation",
+              "rotation": {
+                "z": 0.01
+              }
+            }
           ]
         }
       ],
@@ -34,6 +43,15 @@
           "type": "sprite",
           "name": "TestSprite",
           "material": "testMaterial"
+        }
+      ],
+      "behaviors": [
+        {
+          "name": "rotateX",
+          "type": "rotation",
+          "rotation": {
+            "z": 0.01
+          }
         }
       ]
     }
