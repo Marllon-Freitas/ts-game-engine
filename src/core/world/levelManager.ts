@@ -17,8 +17,6 @@ export class LevelManager implements IMessageHandler {
 
   private static loadZones(asset: JSONAsset): void {
     let levelData = asset.data;
-    if (!levelData.id) throw new Error('Level ID not found in asset data.');
-
     let id: number = Number(levelData.id);
     if (isNaN(id)) throw new Error(`Invalid level ID: ${levelData.id}`);
 
@@ -77,11 +75,9 @@ export class LevelManager implements IMessageHandler {
   }
 
   public onMessage(message: Message): void {
-    if (message.code.indexOf(MESSAGE_ASSET_LOADER_ASSET_LOADED)) {
+    if (message.code.indexOf(MESSAGE_ASSET_LOADER_ASSET_LOADED) !== -1) {
       let asset = message.context as JSONAsset;
-      if (asset) {
-        LevelManager.loadZones(asset);
-      }
+      LevelManager.loadZones(asset);
     }
   }
 }

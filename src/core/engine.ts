@@ -1,4 +1,5 @@
 import { AssetManager } from './assets/assetManager';
+import { initializeComponents } from './components/init';
 import { Color } from './graphics/color';
 import { Material } from './graphics/material';
 import { MaterialManager } from './graphics/materialManager';
@@ -47,6 +48,7 @@ export class Engine {
    */
   public start(): void {
     this.m_canvas = WegGLUtilities.initWebGL();
+    initializeComponents();
 
     AssetManager.initialize();
     LevelManager.initialize();

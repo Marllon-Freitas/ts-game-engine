@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ComponentManager } from '../components/componentManager';
 import { LevelStates } from '../utils';
 import { Shader } from '../webGL/shader';
 import { Scene } from './scene';
@@ -23,7 +24,15 @@ export class Level {
       simObject.transform.setFromJson(dataSection.transform);
     }
 
-    if (dataSection.object) {
+    if (dataSection.components) {
+      for (let componentData in dataSection.components) {
+        let data = dataSection.components[componentData];
+        let component = ComponentManager.extractComponent(data);
+        simObject.addComponent(component);
+      }
+    }
+
+    if (dataSection.children) {
       for (let objectData in dataSection.children) {
         let object = dataSection.children[objectData];
         this.loadSimObject(object, simObject);
@@ -82,10 +91,10 @@ export class Level {
   public onDeactivated(): void {}
 
   public initialize(levelData: any): void {
-    if (!levelData.object) throw new Error('Level data does not contain object information.');
+    if (!levelData.objects) throw new Error('Level data does not contain object information.');
 
-    for (const objectData in levelData.object) {
-      const object = levelData.object[objectData];
+    for (const objectData in levelData.objects) {
+      const object = levelData.objects[objectData];
 
       this.loadSimObject(object, this.m_scene.rootNode);
     }

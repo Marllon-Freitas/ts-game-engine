@@ -1,4 +1,4 @@
-import { BaseComponent } from '../components/baseComponent';
+import { IComponent } from '../components/interfaces/IComponent';
 import { Matrix4x4 } from '../math/matrix4x4';
 import { Transform } from '../math/transform';
 import { Shader } from '../webGL/shader';
@@ -11,7 +11,7 @@ export class SimObject {
   private m_parent!: SimObject | null;
   private m_isLoaded: boolean = false;
   private m_scene!: Scene | null;
-  private m_components: BaseComponent[] = [];
+  private m_components: IComponent[] = [];
   private m_localMatrix: Matrix4x4 = Matrix4x4.identity();
   private m_worldMatrix: Matrix4x4 = Matrix4x4.identity();
 
@@ -78,7 +78,7 @@ export class SimObject {
     return null;
   }
 
-  public addComponent(component: BaseComponent): void {
+  public addComponent(component: IComponent): void {
     component.setOwner(this);
     this.m_components.push(component);
   }
