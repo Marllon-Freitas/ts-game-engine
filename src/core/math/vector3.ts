@@ -95,4 +95,14 @@ export class Vector3 {
     this.m_z /= vector.m_z;
     return this;
   }
+
+  public set(x?: number, y?: number, z?: number): void {
+    if (x !== undefined) this.m_x = x;
+    if (y !== undefined) this.m_y = y;
+    if (z !== undefined) this.m_z = z;
+  }
+
+  public equals(vector: Vector3): boolean {
+    return this.m_x === vector.m_x && this.m_y === vector.m_y && this.m_z === vector.m_z;
+  }
 }

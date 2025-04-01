@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sprite } from '../graphics/sprite';
+import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { BaseComponent } from './baseComponent';
 import { IComponent } from './interfaces/IComponent';
@@ -9,10 +10,12 @@ import { IComponentData } from './interfaces/IComponentData';
 export class SpriteComponentData implements IComponentData {
   public name!: string;
   public materialName!: string;
+  public origin: Vector3 = Vector3.zero;
 
   public setFromJSON(json: any): void {
     if (json.name) this.name = String(json.name);
     if (json.material) this.materialName = String(json.material);
+    if (json.origin) this.origin.setFromJson(json.origin);
   }
 }
 
@@ -36,6 +39,7 @@ export class SpriteComponent extends BaseComponent {
   constructor(data: SpriteComponentData) {
     super(data);
     this.m_sprite = new Sprite(data.name, data.materialName);
+    if (!data.origin.equals(Vector3.zero)) this.m_sprite.origin.copyFrom(data.origin);
   }
 
   public load(): void {

@@ -1,4 +1,5 @@
 import { Matrix4x4 } from '../math/matrix4x4';
+import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { WegGLUtilities } from '../webGL/webGL';
 import { AttributeInfo, WGLBuffer } from '../webGL/wGLBuffer';
@@ -18,6 +19,61 @@ export class Sprite {
   protected m_material: Material | null;
   protected m_materialName: string | null;
   protected m_vertices: Vertex[] = [];
+  protected m_origin: Vector3 = Vector3.zero;
+
+  protected calculateVertices(): void {
+    let minX = -(this.m_width * this.m_origin.x);
+    let maxX = this.m_width * (1.0 - this.m_origin.x);
+
+    let minY = -(this.m_height * this.m_origin.y);
+    let maxY = this.m_height * (1.0 - this.m_origin.y);
+
+    // prettier-ignore
+    this.m_vertices = [
+      // x, y, z,   u, v
+      new Vertex(minX, minY, 0, 0, 0),
+      new Vertex(minX, maxY, 0, 0, 1.0),
+      new Vertex(maxX, maxY, 0, 1.0, 1.0,),
+      
+      new Vertex(maxX, maxY, 0, 1.0, 1.0),
+      new Vertex(maxX, minY, 0, 1.0, 0),
+      new Vertex(minX, minY, 0, 0, 0)
+    ];
+
+    for (let vertices of this.m_vertices) {
+      this.m_buffer.pushBackData(vertices.toArray());
+    }
+
+    this.m_buffer.uploadData();
+    this.m_buffer.unbind();
+  }
+
+  /**
+   * Recalculates the position of the vertices.
+   * @protected
+   */
+  protected reCalculateVertices(): void {
+    let minX = -(this.m_width * this.m_origin.x);
+    let maxX = this.m_width * (1.0 - this.m_origin.x);
+
+    let minY = -(this.m_height * this.m_origin.y);
+    let maxY = this.m_height * (1.0 - this.m_origin.y);
+
+    this.m_vertices[0].position.set(minX, minY);
+    this.m_vertices[1].position.set(minX, maxY);
+    this.m_vertices[2].position.set(maxX, maxY);
+    this.m_vertices[3].position.set(maxX, maxY);
+    this.m_vertices[4].position.set(maxX, minY);
+    this.m_vertices[5].position.set(minX, minY);
+
+    this.m_buffer.clearData();
+    for (let vertices of this.m_vertices) {
+      this.m_buffer.pushBackData(vertices.toArray());
+    }
+
+    this.m_buffer.uploadData();
+    this.m_buffer.unbind();
+  }
 
   // public methods and attributes:
   constructor(name: string, materialName: string, width: number = 100, height: number = 100) {
@@ -30,6 +86,15 @@ export class Sprite {
 
   public get name(): string {
     return this.m_name;
+  }
+
+  public get origin(): Vector3 {
+    return this.m_origin;
+  }
+
+  public set origin(value: Vector3) {
+    this.reCalculateVertices();
+    this.m_origin = value;
   }
 
   public destroy(): void {
@@ -55,24 +120,7 @@ export class Sprite {
     textCoordAttribute.size = 2;
     this.m_buffer.setAttributeLocation(textCoordAttribute);
 
-    // prettier-ignore
-    this.m_vertices = [
-      // x, y, z,   u, v
-      new Vertex(0, 0, 0, 0, 0),
-      new Vertex(0, this.m_height, 0, 0, 1.0),
-      new Vertex(this.m_width, this.m_height, 0, 1.0, 1.0,),
-      
-      new Vertex(this.m_width, this.m_height, 0, 1.0, 1.0),
-      new Vertex(this.m_width, 0, 0, 1.0, 0),
-      new Vertex(0, 0, 0, 0, 0)
-    ];
-
-    for (let vertices of this.m_vertices) {
-      this.m_buffer.pushBackData(vertices.toArray());
-    }
-
-    this.m_buffer.uploadData();
-    this.m_buffer.unbind();
+    this.calculateVertices();
   }
 
   public draw(shader: Shader, modelMatrix: Matrix4x4): void {

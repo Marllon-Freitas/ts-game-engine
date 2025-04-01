@@ -85,7 +85,11 @@
         {
           "type": "sprite",
           "name": "TestSprite",
-          "material": "testMaterial"
+          "material": "testMaterial",
+          "origin": {
+            "x": 0.5,
+            "y": 0.5
+          }
         }
       ],
       "behaviors": [
