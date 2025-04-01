@@ -1,4 +1,5 @@
 import { AssetManager } from './assets/assetManager';
+import { AudioManager } from './audio/audioManager';
 import { initializeComponents } from './components/init';
 import { Color } from './graphics/color';
 import { Material } from './graphics/material';
@@ -86,6 +87,8 @@ export class Engine implements IMessageHandler {
       new Material('ball', '/assets/textures/ball-Sheet.png', Color.WHITE())
     );
 
+    AudioManager.loadSoundFile('bounce', '/assets/sounds/jump.mp3', false);
+
     LevelManager.changeLevel(0);
 
     this.resize();
@@ -115,6 +118,7 @@ export class Engine implements IMessageHandler {
     if (message.code === MESSAGE_MOUSE_UP) {
       let context = message.context as MouseContext;
       document.title = `Mouse Pos: [${context.position.x}, ${context.position.y}]`;
+      AudioManager.playSound('bounce');
     }
   }
 }
