@@ -51,8 +51,37 @@ export class Vector2 {
     return new Vector2(1, 1);
   }
 
+  public static distance(a: Vector2, b: Vector2): number {
+    const diff = a.subtract(b);
+    return Math.sqrt(diff.m_x * diff.m_x + diff.m_y * diff.m_y);
+  }
+
   public copyFrom(vector: Vector2): void {
     this.m_x = vector.m_x;
     this.m_y = vector.m_y;
+  }
+
+  public add(vector: Vector2): Vector2 {
+    this.m_x += vector.m_x;
+    this.m_y += vector.m_y;
+    return this;
+  }
+
+  public subtract(vector: Vector2): Vector2 {
+    this.m_x -= vector.m_x;
+    this.m_y -= vector.m_y;
+    return this;
+  }
+
+  public multiply(vector: Vector2): Vector2 {
+    this.m_x *= vector.m_x;
+    this.m_y *= vector.m_y;
+    return this;
+  }
+
+  public divide(vector: Vector2): Vector2 {
+    this.m_x /= vector.m_x;
+    this.m_y /= vector.m_y;
+    return this;
   }
 }
