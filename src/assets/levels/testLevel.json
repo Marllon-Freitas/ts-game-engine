@@ -36,6 +36,13 @@
             9,
             10
           ]
+        },
+        {
+          "type": "collision",
+          "shape": {
+            "type": "circle",
+            "radius": 128
+          }
         }
       ],
       "behaviors": [
