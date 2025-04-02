@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Vector2 } from './vector2';
+
 /**
  * Vector3 class
  * Represents a 3D vector with x, y, and z components.
@@ -109,5 +112,13 @@ export class Vector3 {
 
   public equals(vector: Vector3): boolean {
     return this.m_x === vector.m_x && this.m_y === vector.m_y && this.m_z === vector.m_z;
+  }
+
+  public clone(): Vector3 {
+    return new Vector3(this.m_x, this.m_y, this.m_z);
+  }
+
+  public toVector2(): Vector2 {
+    return new Vector2(this.m_x, this.m_y);
   }
 }
