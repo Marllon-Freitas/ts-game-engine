@@ -4,6 +4,7 @@ import { Vector2 } from '../math/vector2';
 import { IMessageHandler } from '../messages/interfaces/IMessageHandler';
 import { Message } from '../messages/message';
 import { MESSAGE_ASSET_LOADER_ASSET_LOADED } from '../utils';
+import { MaterialManager } from './materialManager';
 import { Sprite } from './sprite';
 
 class UVInfo {
@@ -53,6 +54,20 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
     }
   }
 
+  private setupFromMaterial(): void {
+    if (!this.m_assetLoaded) {
+      let material = MaterialManager.getMaterial(this.m_materialName);
+      if (material?.diffuseTexture?.isLoaded) {
+        if (AssetManager.isAssetLoaded(material.diffuseTextureName)) {
+          this.m_assetHeight = material.diffuseTexture.height;
+          this.m_asseWidth = material.diffuseTexture.width;
+          this.m_assetLoaded = true;
+          this.calculateUVs();
+        }
+      }
+    }
+  }
+
   // public methods and attributes:
   constructor(
     name: string,
@@ -93,10 +108,13 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
 
   public load(): void {
     super.load();
+    if (!this.m_assetLoaded) this.setupFromMaterial();
   }
 
   public update(deltaTime: number): void {
-    if (!this.m_assetLoaded) return;
+    if (!this.m_assetLoaded) {
+      this.setupFromMaterial();
+    }
 
     this.m_currentTime += deltaTime;
     if (this.m_currentTime >= this.m_frameTime) {

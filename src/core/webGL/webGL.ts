@@ -23,9 +23,12 @@ export class WegGLUtilities {
       document.body.appendChild(canvas);
     }
 
-    const gl = canvas.getContext('webgl');
+    let gl = canvas.getContext('webgl');
 
-    if (!gl) throw new Error('Unable to initialize WebGL. Your browser may not support it.');
+    if (!gl) {
+      gl = canvas.getContext('experimental-webgl') as WebGLRenderingContext | null;
+      if (!gl) throw new Error('WebGL not supported in this browser.');
+    }
 
     WegGLUtilities.gl = gl;
 

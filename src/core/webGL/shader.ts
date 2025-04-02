@@ -27,7 +27,7 @@ export abstract class Shader {
 
     let compiled = WegGLUtilities.gl.getShaderParameter(shader, WegGLUtilities.gl.COMPILE_STATUS);
     if (!compiled) {
-      let error = WegGLUtilities.gl.getShaderInfoLog(shader);
+      let error = WegGLUtilities.gl.getShaderInfoLog(shader)?.trim();
       WegGLUtilities.gl.deleteShader(shader);
       throw new Error(`Error compiling shader ${this.m_name}: ${error}`);
     }

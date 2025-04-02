@@ -8,16 +8,16 @@ export class BehaviorManager {
 
   // public methods and attributes:
   public static registerBehaviorBuilder(builder: IBehaviorBuilder): void {
-    this.m_registeredBuilders[builder.type] = builder;
+    BehaviorManager.m_registeredBuilders[builder.type] = builder;
   }
 
   public static extractBehavior(json: any): IBehavior {
     if (json.type) {
-      if (this.m_registeredBuilders[json.type]) {
-        return this.m_registeredBuilders[String(json.type)].buildFromJSON(json);
+      if (BehaviorManager.m_registeredBuilders[json.type]) {
+        return BehaviorManager.m_registeredBuilders[String(json.type)].buildFromJSON(json);
       }
-      throw new Error('Behavior type not found in JSON.');
+      throw new Error('Behavior Manager: behavior type is not registered.');
     }
-    throw new Error('JSON does not contain a behavior type.');
+    throw new Error('Behavior Manager: behavior type is required.');
   }
 }

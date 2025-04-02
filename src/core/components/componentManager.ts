@@ -8,16 +8,16 @@ export class ComponentManager {
 
   // public methods and attributes:
   public static registerComponentBuilder(builder: IComponentBuilder): void {
-    this.m_registeredBuilders[builder.type] = builder;
+    ComponentManager.m_registeredBuilders[builder.type] = builder;
   }
 
   public static extractComponent(json: any): IComponent {
     if (json.type) {
-      if (this.m_registeredBuilders[json.type]) {
-        return this.m_registeredBuilders[String(json.type)].buildFromJSON(json);
+      if (ComponentManager.m_registeredBuilders[json.type]) {
+        return ComponentManager.m_registeredBuilders[String(json.type)].buildFromJSON(json);
       }
-      throw new Error('Component type not found in JSON.');
+      throw new Error('Component Manager: component type is not registered.');
     }
-    throw new Error('JSON does not contain a component type.');
+    throw new Error('Component Manager: component type is required.');
   }
 }

@@ -17,7 +17,7 @@ export class Sprite {
   protected m_height: number;
   protected m_buffer!: WGLBuffer;
   protected m_material: Material | null;
-  protected m_materialName: string | null;
+  protected m_materialName: string;
   protected m_vertices: Vertex[] = [];
   protected m_origin: Vector3 = Vector3.zero;
 
@@ -102,7 +102,6 @@ export class Sprite {
       this.m_buffer.destroy();
       if (this.m_materialName) MaterialManager.releaseMaterial(this.m_materialName);
       this.m_material = null;
-      this.m_materialName = null;
     }
   }
 
