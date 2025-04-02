@@ -24,6 +24,8 @@ export class Engine implements IMessageHandler {
   private m_basicShader!: BasicShader;
   private m_projectionMatrix!: Matrix4x4;
   private m_previousTime: number = 0;
+  private m_gameWidth: number | null = null;
+  private m_gameHeight: number | null = null;
 
   private loop(): void {
     this.update();
@@ -57,9 +59,14 @@ export class Engine implements IMessageHandler {
   }
 
   // public methods and attributes:
-  public constructor() {
-    // eslint-disable-next-line no-console
-    console.log('Engine constructor called');
+  /**
+   * Constructor for the Engine class.
+   * @param width The width of the canvas.
+   * @param height The height of the canvas.
+   */
+  public constructor(width?: number, height?: number) {
+    this.m_gameWidth = width ? width : null;
+    this.m_gameHeight = height ? height : null;
   }
 
   /**
@@ -67,13 +74,17 @@ export class Engine implements IMessageHandler {
    */
   public start(): void {
     this.m_canvas = WegGLUtilities.initWebGL();
+    if (this.m_gameWidth && this.m_gameHeight) {
+      this.m_canvas.style.width = `${this.m_gameWidth}px`;
+      this.m_canvas.style.height = `${this.m_gameHeight}px`;
+      this.m_canvas.width = this.m_gameWidth;
+      this.m_canvas.height = this.m_gameHeight;
+    }
     initializeComponents();
 
     AssetManager.initialize();
     InputManager.initialize();
     LevelManager.initialize();
-
-    Message.subscribe(MESSAGE_MOUSE_UP, this);
 
     WegGLUtilities.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     WegGLUtilities.gl.enable(WegGLUtilities.gl.BLEND);
@@ -103,8 +114,10 @@ export class Engine implements IMessageHandler {
    */
   public resize(): void {
     if (this.m_canvas) {
-      this.m_canvas.width = window.innerWidth;
-      this.m_canvas.height = window.innerHeight;
+      if (!this.m_gameWidth || !this.m_gameHeight) {
+        this.m_canvas.width = window.innerWidth;
+        this.m_canvas.height = window.innerHeight;
+      }
       WegGLUtilities.gl.viewport(0, 0, this.m_canvas.width, this.m_canvas.height);
       this.m_projectionMatrix = Matrix4x4.orthographic(
         0,
@@ -121,7 +134,6 @@ export class Engine implements IMessageHandler {
     if (message.code === MESSAGE_MOUSE_UP) {
       let context = message.context as MouseContext;
       document.title = `Mouse Pos: [${context.position.x}, ${context.position.y}]`;
-      AudioManager.playSound('bounce');
     }
   }
 }
