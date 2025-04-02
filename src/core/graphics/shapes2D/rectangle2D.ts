@@ -7,7 +7,11 @@ export class Rectangle2D implements IShape2D {
   public position: Vector2 = Vector2.zero;
   public width: number = 0;
   public height: number = 0;
-  public offset: Vector2 = Vector2.zero;
+  public origin: Vector2 = new Vector2(0.5, 0.5);
+
+  public get offset(): Vector2 {
+    return new Vector2(-(this.width * this.origin.x), -(this.height * this.origin.y));
+  }
 
   public setFromJSON(json: any): void {
     if (json.position) this.position.setFromJson(json.position);
@@ -15,8 +19,7 @@ export class Rectangle2D implements IShape2D {
     this.width = Number(json.width);
     if (!json.height) throw new Error('Rectangle2D: height is required');
     this.height = Number(json.height);
-    if (!json.offset) throw new Error('Rectangle2D: offset is required');
-    this.offset.setFromJson(json.offset);
+    if (json.origin) this.origin.setFromJson(json.origin);
   }
 
   public intersects(otherShape: IShape2D): boolean {
@@ -41,17 +44,15 @@ export class Rectangle2D implements IShape2D {
     }
 
     if (otherShape instanceof Circle2D) {
-      if (
-        otherShape.pointInShape(this.position) ||
-        otherShape.pointInShape(new Vector2(this.position.x + this.width, this.position.y)) ||
-        otherShape.pointInShape(
-          new Vector2(this.position.x + this.width, this.position.y + this.height)
-        ) ||
-        otherShape.pointInShape(new Vector2(this.position.x, this.position.y + this.height))
-      ) {
-        return true;
-      }
+      let deltaX =
+        otherShape.position.x -
+        Math.max(this.position.x, Math.min(otherShape.position.x, this.position.x + this.width));
+      let deltaY =
+        otherShape.position.y -
+        Math.max(this.position.y, Math.min(otherShape.position.y, this.position.y + this.height));
+      return deltaX * deltaX + deltaY * deltaY < otherShape.radius * otherShape.radius;
     }
+
     return false;
   }
 

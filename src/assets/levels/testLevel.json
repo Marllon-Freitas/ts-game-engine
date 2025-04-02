@@ -42,14 +42,11 @@
           }
         },
         {
+          "name": "ballCollision",
           "type": "collision",
           "shape": {
             "type": "circle",
-            "radius": 128,
-            "offset": {
-              "x": 128,
-              "y": 128
-            }
+            "radius": 128
           }
         }
       ],
@@ -78,18 +75,14 @@
             "x": 0.5,
             "y": 0.5
           }
-        }, 
+        },
         {
           "name": "testCollision",
           "type": "collision",
           "shape": {
             "type": "rectangle",
             "width": 32,
-            "height": 32,
-            "offset": {
-              "x": -16,
-              "y": -16
-            }
+            "height": 32
           }
         }
       ],
