@@ -17,6 +17,7 @@ export abstract class BaseBehavior implements IBehavior {
   public setOwner(owner: SimObject): void {
     this.m_owner = owner;
   }
+  public updateReady(): void {}
   public update(deltaTime: number): void {}
   public apply(userData: any): void {}
 }

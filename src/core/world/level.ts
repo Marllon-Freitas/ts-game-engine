@@ -80,6 +80,7 @@ export class Level {
   public load(): void {
     this.m_state = LevelStates.LOADING;
     this.m_scene.load();
+    this.m_scene.rootNode.updateReady();
     this.m_state = LevelStates.UPDATING;
   }
 
@@ -93,10 +94,8 @@ export class Level {
     if (this.m_state === LevelStates.UPDATING) this.m_scene.render(shader);
   }
 
-  // TODO:
   public onActivated(): void {}
 
-  // TODO:
   public onDeactivated(): void {}
 
   public initialize(levelData: any): void {

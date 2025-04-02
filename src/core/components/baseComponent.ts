@@ -21,13 +21,8 @@ export abstract class BaseComponent implements IComponent {
   public get owner(): SimObject {
     return this.m_owner;
   }
-
-  // TODO:
+  public updateReady(): void {}
   public update(deltaTime: number): void {}
-
-  // TODO:
   public render(shader: Shader): void {}
-
-  // TODO:
   public load(): void {}
 }

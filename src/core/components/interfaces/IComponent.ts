@@ -6,10 +6,8 @@ export interface IComponent {
   readonly owner: SimObject;
 
   setOwner(owner: SimObject): void;
-
+  updateReady(): void;
   update(deltaTime: number): void;
-
   render(shader: Shader): void;
-
   load(): void;
 }
