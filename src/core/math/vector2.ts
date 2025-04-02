@@ -52,7 +52,7 @@ export class Vector2 {
   }
 
   public static distance(a: Vector2, b: Vector2): number {
-    const diff = a.subtract(b);
+    const diff = a.clone().subtract(b);
     return Math.sqrt(diff.m_x * diff.m_x + diff.m_y * diff.m_y);
   }
 
@@ -83,5 +83,9 @@ export class Vector2 {
     this.m_x /= vector.m_x;
     this.m_y /= vector.m_y;
     return this;
+  }
+
+  public clone(): Vector2 {
+    return new Vector2(this.m_x, this.m_y);
   }
 }
