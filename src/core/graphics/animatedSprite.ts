@@ -30,6 +30,7 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
   private m_assetLoaded: boolean = false;
   private m_asseWidth: number = 2;
   private m_assetHeight: number = 2;
+  private m_isPlaying: boolean = true;
 
   private calculateUVs(): void {
     let totalWidth: number = 0;
@@ -102,6 +103,24 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
     }
   }
 
+  public play(): void {
+    this.m_isPlaying = true;
+  }
+
+  public stop(): void {
+    this.m_isPlaying = false;
+  }
+
+  public setFrame(frameNumber: number): void {
+    if (frameNumber >= this.m_frameCount)
+      throw new Error(`Frame ${frameNumber} out of range, frame count: ${this.m_frameCount}`);
+    this.m_currentFrame = frameNumber;
+  }
+
+  public get isPlaying(): boolean {
+    return this.m_isPlaying;
+  }
+
   public destroy(): void {
     super.destroy();
   }
@@ -114,7 +133,10 @@ export class AnimatedSprite extends Sprite implements IMessageHandler {
   public update(deltaTime: number): void {
     if (!this.m_assetLoaded) {
       this.setupFromMaterial();
+      return;
     }
+
+    if (!this.m_isPlaying) return;
 
     this.m_currentTime += deltaTime;
     if (this.m_currentTime >= this.m_frameTime) {
