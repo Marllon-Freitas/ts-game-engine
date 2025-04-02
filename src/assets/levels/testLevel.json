@@ -35,13 +35,21 @@
             8,
             9,
             10
-          ]
+          ],
+          "origin": {
+            "x": 0.5,
+            "y": 0.5
+          }
         },
         {
           "type": "collision",
           "shape": {
             "type": "circle",
-            "radius": 128
+            "radius": 128,
+            "offset": {
+              "x": 128,
+              "y": 128
+            }
           }
         }
       ],
@@ -61,33 +69,6 @@
           "y": 300
         }
       },
-      "children": [
-        {
-          "name": "testObject",
-          "transform": {
-            "position": {
-              "x": 100,
-              "y": 100
-            }
-          },
-          "components": [
-            {
-              "type": "sprite",
-              "name": "TestSprite",
-              "material": "testMaterial"
-            }
-          ],
-          "behaviors": [
-            {
-              "name": "rotateX",
-              "type": "rotation",
-              "rotation": {
-                "z": 0.01
-              }
-            }
-          ]
-        }
-      ],
       "components": [
         {
           "type": "sprite",
@@ -97,17 +78,22 @@
             "x": 0.5,
             "y": 0.5
           }
-        }
-      ],
-      "behaviors": [
+        }, 
         {
-          "name": "rotateX",
-          "type": "rotation",
-          "rotation": {
-            "z": 0.01
+          "name": "testCollision",
+          "type": "collision",
+          "shape": {
+            "type": "rectangle",
+            "width": 32,
+            "height": 32,
+            "offset": {
+              "x": -16,
+              "y": -16
+            }
           }
         }
-      ]
+      ],
+      "behaviors": []
     }
   ]
 }

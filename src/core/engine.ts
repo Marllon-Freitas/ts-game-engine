@@ -1,5 +1,6 @@
 import { AssetManager } from './assets/assetManager';
 import { AudioManager } from './audio/audioManager';
+import { CollisionManager } from './collision/collisionManager';
 import { initializeComponents } from './components/init';
 import { Color } from './graphics/color';
 import { Material } from './graphics/material';
@@ -34,6 +35,8 @@ export class Engine implements IMessageHandler {
     MessageManager.update();
 
     LevelManager.update(delta);
+
+    CollisionManager.update(delta);
 
     this.m_previousTime = performance.now();
   }

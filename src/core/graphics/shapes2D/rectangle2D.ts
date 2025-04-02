@@ -7,6 +7,7 @@ export class Rectangle2D implements IShape2D {
   public position: Vector2 = Vector2.zero;
   public width: number = 0;
   public height: number = 0;
+  public offset: Vector2 = Vector2.zero;
 
   public setFromJSON(json: any): void {
     if (json.position) this.position.setFromJson(json.position);
@@ -14,6 +15,8 @@ export class Rectangle2D implements IShape2D {
     this.width = Number(json.width);
     if (!json.height) throw new Error('Rectangle2D: height is required');
     this.height = Number(json.height);
+    if (!json.offset) throw new Error('Rectangle2D: offset is required');
+    this.offset.setFromJson(json.offset);
   }
 
   public intersects(otherShape: IShape2D): boolean {

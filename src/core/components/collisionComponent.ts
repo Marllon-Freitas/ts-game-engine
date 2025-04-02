@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { CollisionManager } from '../collision/collisionManager';
 import { Circle2D } from '../graphics/shapes2D/circle2D';
 import { IShape2D } from '../graphics/shapes2D/interfaces/IShape2D';
 import { Rectangle2D } from '../graphics/shapes2D/rectangle2D';
-import { Sprite } from '../graphics/sprite';
-import { Vector3 } from '../math/vector3';
 import { Shader } from '../webGL/shader';
 import { BaseComponent } from './baseComponent';
 import { IComponent } from './interfaces/IComponent';
@@ -60,8 +59,44 @@ export class CollisionComponent extends BaseComponent {
     return this.m_shape;
   }
 
+  public load(): void {
+    super.load();
+    this.m_shape.position.copyFrom(
+      this.m_owner.transform.position.toVector2().add(this.m_shape.offset)
+    );
+    CollisionManager.registerCollisionComponent(this);
+  }
+
+  public update(deltaTime: number): void {
+    // Update the shape with the current position of the owner
+    this.m_shape.position.copyFrom(
+      this.m_owner.transform.position.toVector2().add(this.m_shape.offset)
+    );
+
+    super.update(deltaTime);
+  }
+
   public render(shader: Shader): void {
     // this.m_sprite.draw(shader, this.m_owner.worldMatrix);
     super.render(shader);
+  }
+
+  public onCollisionEntry(otherComponent: CollisionComponent): void {
+    // Handle collision entry
+    console.log(
+      `Collision detected between ${this.m_owner.name} and ${otherComponent.m_owner.name}`
+    );
+  }
+
+  public onCollisionUpdate(otherComponent: CollisionComponent): void {
+    // Handle collision stay
+    console.log(
+      `Collision updated between ${this.m_owner.name} and ${otherComponent.m_owner.name}`
+    );
+  }
+
+  public onCollisionExit(otherComponent: CollisionComponent): void {
+    // Handle collision exit
+    console.log(`Collision exited between ${this.m_owner.name} and ${otherComponent.m_owner.name}`);
   }
 }

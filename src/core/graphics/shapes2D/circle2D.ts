@@ -6,11 +6,14 @@ import { Rectangle2D } from './rectangle2D';
 export class Circle2D implements IShape2D {
   public position: Vector2 = Vector2.zero;
   public radius: number = 0;
+  public offset: Vector2 = Vector2.zero;
 
   public setFromJSON(json: any): void {
     if (json.position) this.position.setFromJson(json.position);
     if (!json.radius) throw new Error('Circle2D: radius is required');
     this.radius = Number(json.radius);
+    if (!json.offset) throw new Error('Circle2D: offset is required');
+    this.offset.setFromJson(json.offset);
   }
 
   public intersects(otherShape: IShape2D): boolean {
