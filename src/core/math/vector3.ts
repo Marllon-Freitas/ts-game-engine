@@ -40,6 +40,11 @@ export class Vector3 {
     this.m_z = value;
   }
 
+  public static distance(a: Vector3, b: Vector3): number {
+    const diff = a.subtract(b);
+    return Math.sqrt(diff.m_x * diff.m_x + diff.m_y * diff.m_y + diff.m_z * diff.m_z);
+  }
+
   public toArray(): number[] {
     return [this.m_x, this.m_y, this.m_z];
   }
