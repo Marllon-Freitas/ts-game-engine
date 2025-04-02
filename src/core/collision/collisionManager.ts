@@ -1,6 +1,7 @@
 import { CollisionComponent } from '../components/collisionComponent';
+import { Message } from '../messages/message';
 
-class CollisionData {
+export class CollisionData {
   public componentA: CollisionComponent;
   public componentB: CollisionComponent;
   public time: number;
@@ -71,6 +72,12 @@ export class CollisionManager {
             );
             component.onCollisionEntry(otherComponent);
             otherComponent.onCollisionEntry(component);
+            Message.sendHighPriority(`COLLISION_ENTRY: ${component.name}`, this, collisionData);
+            Message.sendHighPriority(
+              `COLLISION_ENTRY: ${otherComponent.name}`,
+              this,
+              collisionData
+            );
             this.m_collisionData.push(collisionData);
           }
         }
@@ -97,9 +104,9 @@ export class CollisionManager {
 
         data.componentA.onCollisionExit(data.componentB);
         data.componentB.onCollisionExit(data.componentA);
+        Message.sendHighPriority(`COLLISION_EXIT: ${data.componentA.name}`, this, data);
+        Message.sendHighPriority(`COLLISION_EXIT: ${data.componentB.name}`, this, data);
       }
     }
-
-    document.title = `CollisionManager: ${CollisionManager.m_collisionComponents.length} components, ${CollisionManager.m_collisionData.length} collisions`;
   }
 }
