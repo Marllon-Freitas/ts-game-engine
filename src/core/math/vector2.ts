@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Vector3 } from './vector3';
+
 /**
  * Vector2 class
  * This class represents a 2D vector with x and y coordinates.
@@ -87,5 +90,20 @@ export class Vector2 {
 
   public clone(): Vector2 {
     return new Vector2(this.m_x, this.m_y);
+  }
+
+  public toVector3(z: number = 0): Vector3 {
+    return new Vector3(this.m_x, this.m_y, z);
+  }
+
+  public set(x?: number, y?: number): void {
+    if (x !== undefined) this.m_x = x;
+    if (y !== undefined) this.m_y = y;
+  }
+
+  public scale(scale: number): Vector2 {
+    this.m_x *= scale;
+    this.m_y *= scale;
+    return this;
   }
 }
