@@ -9,6 +9,10 @@
         "position": {
           "x": 100,
           "y": 100
+        },
+        "scale": {
+          "x": 2,
+          "y": 2
         }
       },
       "components": [
@@ -43,7 +47,11 @@
           "type": "collision",
           "shape": {
             "type": "circle",
-            "radius": 128
+            "radius": 16,
+            "offset": {
+              "x": 0.5,
+              "y": 0.5
+            }
           }
         }
       ],
@@ -61,6 +69,10 @@
         "position": {
           "x": 300,
           "y": 300
+        },
+        "scale": {
+          "x": 3,
+          "y": 3
         }
       },
       "components": [
@@ -71,7 +83,9 @@
           "origin": {
             "x": 0.5,
             "y": 0.5
-          }
+          },
+          "width": 32,
+          "height": 32
         },
         {
           "name": "testCollision",

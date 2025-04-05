@@ -48,11 +48,39 @@ export class CollisionComponentBuilder implements IComponentBuilder {
 export class CollisionComponent extends BaseComponent {
   // private methods and attributes:
   private m_shape: IShape2D;
+  private m_originalWidth: number = 0;
+  private m_originalHeight: number = 0;
+  private m_originalRadius: number = 0;
+
+  /**
+   * Updates the size of the collision shape based on the scale of the owner
+   * @private
+   */
+  private updateShapeProperties(): void {
+    if (this.m_shape instanceof Rectangle2D) {
+      this.m_shape.width = this.m_originalWidth * this.m_owner.transform.scale.x;
+      this.m_shape.height = this.m_originalHeight * this.m_owner.transform.scale.y;
+    } else if (this.m_shape instanceof Circle2D) {
+      const avgScale = (this.m_owner.transform.scale.x + this.m_owner.transform.scale.y) / 2;
+      this.m_shape.radius = this.m_originalRadius * avgScale;
+    }
+
+    this.m_shape.position.copyFrom(
+      this.m_owner.transform.position.toVector2().add(this.m_shape.offset)
+    );
+  }
 
   // public methods and attributes:
   constructor(data: CollisionComponentData) {
     super(data);
     this.m_shape = data.shape;
+
+    if (this.m_shape instanceof Rectangle2D) {
+      this.m_originalWidth = this.m_shape.width;
+      this.m_originalHeight = this.m_shape.height;
+    } else if (this.m_shape instanceof Circle2D) {
+      this.m_originalRadius = this.m_shape.radius;
+    }
   }
 
   public get shape(): IShape2D {
@@ -73,11 +101,12 @@ export class CollisionComponent extends BaseComponent {
       this.m_owner.transform.position.toVector2().add(this.m_shape.offset)
     );
 
+    this.updateShapeProperties();
+
     super.update(deltaTime);
   }
 
   public render(shader: Shader): void {
-    // this.m_sprite.draw(shader, this.m_owner.worldMatrix);
     super.render(shader);
   }
 

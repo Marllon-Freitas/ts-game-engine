@@ -16,10 +16,7 @@ export class Circle2D implements IShape2D {
   }
 
   public get offset(): Vector2 {
-    return new Vector2(
-      this.radius + this.radius * this.origin.x,
-      this.radius + this.radius * this.origin.y
-    );
+    return new Vector2(-(this.radius * this.origin.x), -(this.radius * this.origin.y));
   }
 
   public intersects(otherShape: IShape2D): boolean {
